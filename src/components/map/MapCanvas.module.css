@@ -1,0 +1,240 @@
+.frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  min-height: 300px;
+  max-height: max(300px, calc(100dvh - 330px));
+  background: #070a0e;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.tall {
+  aspect-ratio: 5 / 4;
+  max-height: max(320px, calc(100dvh - 310px));
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.svg:active {
+  cursor: grabbing;
+}
+
+.picking {
+  cursor: crosshair;
+}
+
+.ocean {
+  fill: var(--ocean);
+}
+
+.land {
+  fill: var(--land);
+}
+
+/* ---- Countries ---- */
+
+.country {
+  transition: fill 200ms;
+}
+
+.bordered {
+  stroke: #0b1016;
+  stroke-width: 1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.fill-plain {
+  fill: #35475c;
+}
+
+.fill-dim {
+  fill: var(--land);
+}
+
+.fill-accent {
+  fill: var(--accent);
+}
+
+.fill-good {
+  fill: #2f9d5c;
+}
+
+.fill-bad {
+  fill: #b34a4a;
+}
+
+/* ---- Outlines drawn by games ---- */
+
+.shape-ring,
+.shape-ringFaint,
+.shape-line {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.shape-ring {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.shape-ringFaint {
+  stroke: color-mix(in srgb, var(--accent) 45%, transparent);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 4;
+}
+
+.shape-band {
+  fill: var(--accent);
+  fill-opacity: 0.1;
+  fill-rule: evenodd;
+  stroke: none;
+  pointer-events: none;
+}
+
+.shape-line {
+  stroke: var(--text);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 5;
+  opacity: 0.8;
+}
+
+/* ---- Markers ---- */
+
+.marker {
+  --tone: var(--accent);
+  pointer-events: none;
+}
+
+.tone-good {
+  --tone: var(--good);
+}
+
+.tone-bad {
+  --tone: var(--bad);
+}
+
+.tone-dim {
+  --tone: #8fa1b5;
+}
+
+.tone-plain {
+  --tone: var(--text);
+}
+
+.dot {
+  fill: var(--tone);
+  stroke: #070a0e;
+  stroke-width: 1.5;
+}
+
+.slot {
+  fill: rgba(7, 10, 14, 0.55);
+  stroke: var(--tone);
+  stroke-width: 1.5;
+}
+
+.pin {
+  fill: var(--tone);
+  stroke: #070a0e;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.pinHole {
+  fill: #070a0e;
+}
+
+.pulse {
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse 2.2s ease-out infinite;
+}
+
+.pulseLate {
+  animation-delay: 1.1s;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(3.6);
+    opacity: 0;
+  }
+}
+
+.label {
+  fill: var(--text);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  paint-order: stroke;
+  stroke: #070a0e;
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
+}
+
+/* ---- Zoom buttons ---- */
+
+.controls {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.controls button {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  transition: color 120ms, background 120ms;
+}
+
+.controls button:last-child {
+  border-bottom: 0;
+}
+
+.controls button:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.controls button:focus-visible {
+  outline-offset: -2px;
+}
+
+.controls svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}

@@ -691,7 +691,7 @@
 }
 
 .roundPoints {
-  width: 28px;
+  min-width: 28px;
   text-align: right;
   font-weight: 600;
 }
@@ -745,4 +745,10 @@
   .roundNote {
     display: none;
   }
+}
+
+.startButton:disabled {
+  opacity: 0.45;
+  cursor: default;
+  filter: none;
 }
