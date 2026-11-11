@@ -41,6 +41,19 @@
   fill: var(--land);
 }
 
+.lakeOnOcean,
+.lakeOnFrame {
+  pointer-events: none;
+}
+
+.lakeOnOcean {
+  fill: var(--ocean);
+}
+
+.lakeOnFrame {
+  fill: #070a0e;
+}
+
 /* ---- Countries ---- */
 
 .country {
@@ -131,6 +144,24 @@
 
 .tone-plain {
   --tone: var(--text);
+}
+
+/* Markers whose name only shows while the pointer is on them. */
+.hoverLabel {
+  pointer-events: auto;
+}
+
+.hoverLabel .label {
+  opacity: 0;
+  transition: opacity 120ms;
+}
+
+.hoverLabel:hover .label {
+  opacity: 1;
+}
+
+.hit {
+  fill: transparent;
 }
 
 .dot {

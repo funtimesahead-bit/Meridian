@@ -5,7 +5,7 @@ export type GameInfo = {
   blurb: string;
   tags: string[];
   /** Which picture the card shows. */
-  art: "dot" | "pin" | "rings" | "ring";
+  art: "dot" | "pin" | "rings" | "ring" | "route";
   /** Where the game's best scores are saved (see src/lib/scores.ts). */
   scoreKey?: string;
 };
@@ -45,5 +45,14 @@ export const GAMES: GameInfo[] = [
     tags: ["Cities", "Population", "Typing"],
     art: "ring",
     scoreKey: "ring-biggest",
+  },
+  {
+    slug: "border-run",
+    title: "Border Run",
+    blurb:
+      "Two countries, joined by land. Name the countries in between to build the shortest route across the borders.",
+    tags: ["Countries", "Borders", "Typing"],
+    art: "route",
+    scoreKey: "border-run",
   },
 ];

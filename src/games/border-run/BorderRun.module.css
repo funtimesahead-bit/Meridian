@@ -1,0 +1,26 @@
+.prompt {
+  font-size: 17px;
+  color: var(--muted);
+}
+
+.prompt strong {
+  color: var(--accent);
+  font-weight: 650;
+}
+
+.chip {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.chipGood {
+  background: var(--good-soft);
+  color: var(--good);
+}
+
+.chipBad {
+  background: var(--bad-soft);
+  color: var(--bad);
+}

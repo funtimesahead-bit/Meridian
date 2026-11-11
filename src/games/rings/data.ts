@@ -65,9 +65,9 @@ export const RING_RULES: Record<
   Difficulty,
   { stepKm: number; minPopulation: number; maxPopulation: number; centreNamed: boolean }
 > = {
-  easy: { stepKm: 300, minPopulation: 1_000_000, maxPopulation: Infinity, centreNamed: true },
-  medium: { stepKm: 175, minPopulation: 200_000, maxPopulation: 1_000_000, centreNamed: true },
-  hard: { stepKm: 100, minPopulation: 40_000, maxPopulation: 200_000, centreNamed: false },
+  easy: { stepKm: 420, minPopulation: 1_000_000, maxPopulation: Infinity, centreNamed: true },
+  medium: { stepKm: 245, minPopulation: 200_000, maxPopulation: 1_000_000, centreNamed: true },
+  hard: { stepKm: 140, minPopulation: 40_000, maxPopulation: 200_000, centreNamed: false },
 };
 
 export type RingGame = {

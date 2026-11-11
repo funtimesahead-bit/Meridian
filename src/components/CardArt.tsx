@@ -9,10 +9,10 @@ const DIM_DOTS: [number, number][] = [
 const AMBER = "#f6b73c";
 const DIM = "#3a4c62";
 
-export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "borders" }) {
+export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "borders" | "route" }) {
   return (
     <svg viewBox="0 0 320 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      {kind !== "borders" &&
+      {kind !== "borders" && kind !== "route" &&
         DIM_DOTS.map(([x, y]) => <circle key={`${x}-${y}`} cx={x} cy={y} r="2.4" fill={DIM} />)}
 
       {kind === "dot" && (
@@ -66,6 +66,18 @@ export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "bo
             </>
           )}
         </>
+      )}
+
+      {kind === "route" && (
+        <g stroke="#0b1016" strokeWidth="2" strokeLinejoin="round">
+          <path d="M28 52 L84 36 L104 84 L60 112 L24 96 Z" fill={AMBER} />
+          <path d="M84 36 L150 44 L140 92 L104 84 Z" fill="#2f9d5c" />
+          <path d="M150 44 L214 34 L222 86 L140 92 Z" fill="#35475c" />
+          <path d="M104 84 L140 92 L150 136 L92 140 L60 112 Z" fill="#35475c" />
+          <path d="M140 92 L222 86 L232 130 L150 136 Z" fill="#2f9d5c" />
+          <path d="M214 34 L282 44 L296 96 L222 86 Z" fill="#35475c" />
+          <path d="M222 86 L296 96 L290 140 L232 130 Z" fill={AMBER} />
+        </g>
       )}
 
       {kind === "borders" && (

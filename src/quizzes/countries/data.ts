@@ -20,6 +20,8 @@ export type CountryQuiz = {
   region: string;
   scene: SceneId;
   countries: QuizCountry[];
+  /** An optional harder version that adds more places, e.g. territories. */
+  extra?: { label: string; baseLabel: string; places: QuizCountry[] };
 };
 
 type Options = { shapes?: string[]; aliases?: string[]; marker?: [number, number] };
@@ -145,6 +147,148 @@ const NORTH_AMERICA: QuizCountry[] = [
   }),
 ];
 
+/**
+ * Dependent territories and overseas regions in North America.
+ * `shapes: []` marks places with no outline of their own in the map file;
+ * they are shown by their marker only.
+ */
+const NORTH_AMERICA_TERRITORIES: QuizCountry[] = [
+  c("Anguilla", { marker: [-63.05, 18.22] }),
+  c("Aruba", { marker: [-69.97, 12.52] }),
+  c("Bermuda", { marker: [-64.75, 32.3] }),
+  c("British Virgin Islands", {
+    shapes: ["British Virgin Is."],
+    aliases: ["BVI", "British Virgin Is"],
+    marker: [-64.6, 18.45],
+  }),
+  c("Caribbean Netherlands", {
+    shapes: [],
+    aliases: ["Bonaire", "Bonaire Sint Eustatius and Saba", "BES Islands"],
+    marker: [-68.27, 12.18],
+  }),
+  c("Cayman Islands", {
+    shapes: ["Cayman Is."],
+    aliases: ["Caymans", "Cayman Is", "Grand Cayman"],
+    marker: [-81.25, 19.3],
+  }),
+  c("Curaçao", { marker: [-68.99, 12.17] }),
+  c("Greenland"),
+  c("Guadeloupe", { shapes: [], marker: [-61.55, 16.25] }),
+  c("Martinique", { shapes: [], marker: [-61.0, 14.65] }),
+  c("Montserrat", { marker: [-62.19, 16.74] }),
+  c("Puerto Rico"),
+  c("Saint Barthélemy", {
+    shapes: ["St-Barthélemy"],
+    aliases: ["St Barts", "Saint Barts", "St Barth", "Saint Barth"],
+    marker: [-62.83, 17.9],
+  }),
+  c("Saint Martin", {
+    shapes: ["St-Martin"],
+    aliases: ["Saint Martin (French)", "French Saint Martin"],
+    marker: [-63.06, 18.1],
+  }),
+  c("Saint Pierre and Miquelon", {
+    shapes: ["St. Pierre and Miquelon"],
+    aliases: ["St Pierre Miquelon", "Saint Pierre", "St Pierre et Miquelon"],
+    marker: [-56.3, 46.9],
+  }),
+  c("Sint Maarten", {
+    aliases: ["Sint Maarten (Dutch)", "Dutch Sint Maarten", "St Maarten"],
+    marker: [-63.06, 18.02],
+  }),
+  c("Turks and Caicos Islands", {
+    shapes: ["Turks and Caicos Is."],
+    aliases: ["Turks and Caicos", "Turks Caicos", "Turks and Caicos Is"],
+    marker: [-71.8, 21.75],
+  }),
+  c("US Virgin Islands", {
+    shapes: ["U.S. Virgin Is."],
+    aliases: ["USVI", "United States Virgin Islands", "Virgin Islands", "US Virgin Is"],
+    marker: [-64.8, 17.95],
+  }),
+];
+
+const ASIA: QuizCountry[] = [
+  c("Afghanistan"),
+  c("Armenia"),
+  c("Azerbaijan"),
+  c("Bahrain", { marker: [50.55, 26.05] }),
+  c("Bangladesh"),
+  c("Bhutan"),
+  c("Brunei", { marker: [114.7, 4.5] }),
+  c("Cambodia"),
+  c("China", { aliases: ["PRC", "Peoples Republic of China"] }),
+  c("Cyprus", { shapes: ["Cyprus", "N. Cyprus"] }),
+  c("Georgia"),
+  c("India"),
+  c("Indonesia"),
+  c("Iran"),
+  c("Iraq"),
+  c("Israel"),
+  c("Japan"),
+  c("Jordan"),
+  c("Kazakhstan"),
+  c("Kuwait"),
+  c("Kyrgyzstan"),
+  c("Laos"),
+  c("Lebanon"),
+  c("Malaysia"),
+  c("Maldives", { marker: [73.5, 3.2] }),
+  c("Mongolia"),
+  c("Myanmar", { aliases: ["Burma"] }),
+  c("Nepal"),
+  c("North Korea", { aliases: ["DPRK"] }),
+  c("Oman"),
+  c("Pakistan"),
+  c("Palestine", { aliases: ["State of Palestine"], marker: [35.25, 31.95] }),
+  c("Philippines", { aliases: ["The Philippines"] }),
+  c("Qatar"),
+  c("Russia", { aliases: ["Russian Federation"] }),
+  c("Saudi Arabia"),
+  c("Singapore", { marker: [103.82, 1.35] }),
+  c("South Korea", { aliases: ["Republic of Korea", "ROK"] }),
+  c("Sri Lanka"),
+  c("Syria"),
+  c("Taiwan"),
+  c("Tajikistan"),
+  c("Thailand"),
+  c("Timor-Leste", { aliases: ["East Timor", "Timor Leste"] }),
+  c("Turkey", { aliases: ["Türkiye"] }),
+  c("Turkmenistan"),
+  c("United Arab Emirates", { aliases: ["UAE", "Emirates"] }),
+  c("Uzbekistan"),
+  c("Vietnam"),
+  c("Yemen"),
+];
+
+const OCEANIA: QuizCountry[] = [
+  c("Australia"),
+  c("Fiji", { marker: [178, -17.8] }),
+  c("Kiribati", { marker: [173, 1.4] }),
+  c("Marshall Islands", {
+    shapes: ["Marshall Is."],
+    aliases: ["Marshall Is", "Marshalls"],
+    marker: [171.2, 7.1],
+  }),
+  c("Micronesia", {
+    aliases: ["Federated States of Micronesia", "FSM"],
+    marker: [158.2, 6.9],
+  }),
+  c("Nauru", { marker: [166.93, -0.53] }),
+  c("New Zealand", { aliases: ["NZ", "Aotearoa"] }),
+  c("Palau", { marker: [134.5, 7.4] }),
+  c("Papua New Guinea", { aliases: ["PNG"] }),
+  c("Samoa", { marker: [-172.1, -13.75] }),
+  c("Solomon Islands", {
+    shapes: ["Solomon Is."],
+    aliases: ["Solomons", "Solomon Is"],
+    marker: [160, -9.5],
+  }),
+  c("Tonga", { marker: [-175.2, -21.15] }),
+  c("Tuvalu", { shapes: [], marker: [179.2, -8.5] }),
+  c("Vanuatu", { marker: [167.5, -16.5] }),
+];
+
 export const COUNTRY_QUIZZES: CountryQuiz[] = [
   {
     slug: "countries-of-europe",
@@ -161,6 +305,27 @@ export const COUNTRY_QUIZZES: CountryQuiz[] = [
     region: "North America",
     scene: "north-america",
     countries: NORTH_AMERICA,
+    extra: {
+      baseLabel: "Countries",
+      label: "Countries + territories",
+      places: NORTH_AMERICA_TERRITORIES,
+    },
+  },
+  {
+    slug: "countries-of-asia",
+    title: "Countries of Asia",
+    blurb: "Name all 50, from Turkey to Japan.",
+    region: "Asia",
+    scene: "asia",
+    countries: ASIA,
+  },
+  {
+    slug: "countries-of-oceania",
+    title: "Countries of Oceania",
+    blurb: "Name all 14. Two are easy; the islands are not.",
+    region: "Oceania",
+    scene: "oceania",
+    countries: OCEANIA,
   },
 ];
 

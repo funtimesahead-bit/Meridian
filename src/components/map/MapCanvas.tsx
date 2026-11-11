@@ -41,6 +41,8 @@ export type MapMarker = {
   label?: string;
   /** Which side of the dot the label sits on. Defaults to the right, or left near the right edge. */
   labelSide?: "left" | "right";
+  /** Hide the label until the pointer is over the dot. */
+  labelOnHover?: boolean;
   pulse?: boolean;
 };
 
@@ -97,6 +99,8 @@ export default function MapCanvas({
   const frameRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [size, setSize] = useState({ width: W, height: H });
+  /** False until the frame has been measured; nothing is positioned before then. */
+  const [measured, setMeasured] = useState(false);
   const [view, setView] = useState<View>({ k: 0, x: 0, y: 0 });
 
   const viewH = (W * size.height) / Math.max(1, size.width);
@@ -131,6 +135,7 @@ export default function MapCanvas({
       if (rect.width > 0 && rect.height > 0) {
         viewHRef.current = (W * rect.height) / rect.width;
         setSize({ width: rect.width, height: rect.height });
+        setMeasured(true);
       }
     };
     measure();
@@ -215,6 +220,7 @@ export default function MapCanvas({
   const frameShape = Math.round(viewH);
   const settled = useRef(false);
   useEffect(() => {
+    if (!measured) return;
     const target = viewFor(focusRef.current);
     if (settled.current) {
       animateTo(target);
@@ -224,7 +230,7 @@ export default function MapCanvas({
       stopAnimation();
       setView(clampView(target, viewHRef.current));
     }
-  }, [focusKey, frameShape, animateTo, viewFor, stopAnimation, clampView]);
+  }, [measured, focusKey, frameShape, animateTo, viewFor, stopAnimation, clampView]);
 
   /* ---- Drag to pan, pinch or scroll to zoom, click to pick ---- */
 
@@ -373,6 +379,17 @@ export default function MapCanvas({
     [countries, borders, scene],
   );
 
+  // Lakes go above the countries so a filled country still shows its lakes.
+  const lakeLayer = useMemo(
+    () => (
+      <path
+        d={scene.lakesPath}
+        className={scene.backdropPath ? styles.lakeOnOcean : styles.lakeOnFrame}
+      />
+    ),
+    [scene],
+  );
+
   const shapeLayer = useMemo(
     () =>
       shapes?.map((shape) => {
@@ -399,6 +416,7 @@ export default function MapCanvas({
         <g transform={`translate(${shown.x} ${shown.y}) scale(${shown.k})`}>
           {base}
           {countryLayer}
+          {lakeLayer}
           {shapeLayer}
 
           {markers?.map((marker) => {
@@ -412,7 +430,9 @@ export default function MapCanvas({
               <g
                 key={marker.id}
                 transform={`translate(${point[0]} ${point[1]}) scale(${dotScale})`}
-                className={`${styles.marker} ${styles[`tone-${tone}`]}`}
+                className={`${styles.marker} ${styles[`tone-${tone}`]} ${
+                  marker.labelOnHover ? styles.hoverLabel : ""
+                }`}
               >
                 {marker.pulse && (
                   <>
@@ -433,6 +453,7 @@ export default function MapCanvas({
                 ) : (
                   <circle r={r} className={styles.dot} />
                 )}
+                {marker.labelOnHover && <circle r={r + 7} className={styles.hit} />}
                 {marker.label && (
                   <text
                     className={styles.label}

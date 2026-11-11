@@ -12,6 +12,7 @@ import { geoNaturalEarth1, geoPath } from "d3-geo";
 import { feature } from "topojson-client";
 import type { Topology } from "topojson-specification";
 import landTopology from "world-atlas/land-50m.json";
+import lakes from "@/lib/geo/lakes.json";
 import styles from "./WorldMap.module.css";
 
 /* The map is drawn once in a fixed 1000 x 500 coordinate space, then moved
@@ -33,6 +34,7 @@ const pathFor = geoPath(projection).digits(1);
 const topology = landTopology as unknown as Topology;
 const LAND_PATH = pathFor(feature(topology, topology.objects.land)) ?? "";
 const SPHERE_PATH = pathFor({ type: "Sphere" }) ?? "";
+const LAKES_PATH = pathFor(lakes as unknown as Parameters<typeof pathFor>[0]) ?? "";
 
 type View = { k: number; x: number; y: number };
 
@@ -266,6 +268,7 @@ export default function WorldMap({
       <>
         <path d={SPHERE_PATH} className={styles.ocean} />
         <path d={LAND_PATH} className={styles.land} />
+        <path d={LAKES_PATH} className={styles.ocean} />
       </>
     ),
     [],

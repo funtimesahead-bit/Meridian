@@ -332,14 +332,19 @@ export default function RingGame({ mode }: { mode: AnyRingMode }) {
     const side = (city: RingCity) => (city.lon < game.centre.lon ? "left" : "right");
     states.forEach((s, i) => {
       if (i > ringIndex) return;
+      // Once a ring is over its names are tucked away; hover a dot to read it.
+      // In the biggest-city game the correct answers stay labelled.
+      const over = Boolean(s.done);
+      const quiet = over;
+      const answerQuiet = over && mode === "five";
       for (const city of s.wrong) {
-        list.push({ id: `w${city.id}`, lon: city.lon, lat: city.lat, tone: "dim", size: 3.5, label: city.name, labelSide: side(city) });
+        list.push({ id: `w${city.id}`, lon: city.lon, lat: city.lat, tone: "dim", size: 3.5, label: city.name, labelSide: side(city), labelOnHover: quiet });
       }
       for (const city of revealedFor(i)) {
-        list.push({ id: `r${city.id}`, lon: city.lon, lat: city.lat, tone: "bad", size: 4, label: city.name, labelSide: side(city) });
+        list.push({ id: `r${city.id}`, lon: city.lon, lat: city.lat, tone: "bad", size: 4, label: city.name, labelSide: side(city), labelOnHover: answerQuiet });
       }
       for (const city of s.named) {
-        list.push({ id: `n${city.id}`, lon: city.lon, lat: city.lat, tone: "good", size: 4, label: city.name, labelSide: side(city) });
+        list.push({ id: `n${city.id}`, lon: city.lon, lat: city.lat, tone: "good", size: 4, label: city.name, labelSide: side(city), labelOnHover: answerQuiet });
       }
     });
     list.push({

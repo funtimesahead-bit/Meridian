@@ -52,6 +52,23 @@
   color: var(--text);
 }
 
+.variants {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: min(100%, 460px);
+}
+
+.variants button {
+  padding: 0 12px;
+  font-size: 14.5px;
+}
+
+.doneActions {
+  display: flex;
+  gap: 8px;
+}
+
 .last {
   color: var(--good);
   font-weight: 600;

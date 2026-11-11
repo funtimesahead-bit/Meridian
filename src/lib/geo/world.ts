@@ -12,10 +12,11 @@ import {
   type GeoPermissibleObjects,
   type GeoProjection,
 } from "d3-geo";
-import { feature } from "topojson-client";
+import { feature, neighbors } from "topojson-client";
 import type { Feature, FeatureCollection, MultiPolygon, Polygon, Position } from "geojson";
 import type { GeometryCollection, Topology } from "topojson-specification";
 import atlas from "world-atlas/countries-50m.json";
+import lakes from "./lakes.json";
 
 const topology = atlas as unknown as Topology;
 
@@ -32,10 +33,21 @@ export const COUNTRY_SHAPES = new Map<string, CountryFeature>(
 );
 
 const LAND = feature(topology, topology.objects.land);
+/** The world's large lakes (Natural Earth), drawn as water on top of the land. */
+const LAKES = lakes as unknown as GeoPermissibleObjects;
+
+/** For each country shape, the shapes it shares a land border with. */
+export const SHAPE_NEIGHBOURS: Map<string, string[]> = (() => {
+  const geometries = (topology.objects.countries as GeometryCollection<{ name: string }>)
+    .geometries;
+  const adjacency = neighbors(geometries);
+  const nameOf = (index: number) => (geometries[index].properties as { name: string }).name;
+  return new Map(geometries.map((_, i) => [nameOf(i), adjacency[i].map(nameOf)]));
+})();
 
 /* ---------- Scenes: a projection plus the size of its drawing area ---------- */
 
-export type SceneId = "world" | "europe" | "north-america";
+export type SceneId = "world" | "europe" | "north-america" | "asia" | "oceania";
 
 export type Scene = {
   id: string;
@@ -46,6 +58,7 @@ export type Scene = {
   /** Same projection with full precision, for shapes viewed zoomed far in. */
   finePath: GeoPath;
   landPath: string;
+  lakesPath: string;
   /** Background shape behind the land (the globe outline on the world map). */
   backdropPath: string | null;
   /**
@@ -128,11 +141,51 @@ function buildProjection(id: SceneId): Built {
         [-168, 65.5], // west Alaska
         [-141, 70],
         [-75, 83], // north Canada
+        [-35, 83.5], // north Greenland
+        [-19, 72], // east Greenland
         [-52.6, 47.5], // Newfoundland
         [-59.4, 13.1], // Barbados
         [-61, 10], // Trinidad
         [-77.3, 7.3], // south Panama
         [-117, 32.5],
+      ],
+    );
+  }
+  if (id === "asia") {
+    return fitToPoints(
+      geoAzimuthalEqualArea().rotate([-88, -30]).clipAngle(80),
+      1000,
+      820,
+      450,
+      [
+        [26.2, 39.5], // west Turkey
+        [34.3, 31.3], // Gaza / Sinai edge
+        [43.5, 12.7], // south-west Yemen
+        [73.5, -0.6], // south Maldives
+        [106, -8.5], // Java
+        [125, -10.3], // Timor
+        [140.9, -6], // east Indonesia
+        [145.5, 43.5], // east Hokkaido
+        [100, 56], // keep a slice of Russia
+        [60, 55],
+      ],
+    );
+  }
+  if (id === "oceania") {
+    return fitToPoints(
+      geoAzimuthalEqualArea().rotate([-158, 17]).clipAngle(85),
+      1000,
+      780,
+      450,
+      [
+        [113.2, -24], // west Australia
+        [116, -35],
+        [134.5, 8], // Palau
+        [171, 10], // Marshall Islands
+        [-171, -13.5], // Samoa
+        [-174, -21.5], // Tonga
+        [167.5, -47], // south New Zealand
+        [147, -43.5], // Tasmania
       ],
     );
   }
@@ -166,6 +219,7 @@ export function getScene(id: SceneId): Scene {
     path,
     finePath: geoPath(projection),
     landPath: path(LAND) ?? "",
+    lakesPath: path(LAKES) ?? "",
     backdropPath: id === "world" ? path({ type: "Sphere" }) : null,
     home,
     countryPath(name) {
@@ -216,6 +270,7 @@ export function getCentredScene(lon: number, lat: number): Scene {
     path,
     finePath: geoPath(projection),
     landPath: path(LAND) ?? "",
+    lakesPath: path(LAKES) ?? "",
     backdropPath: path({ type: "Sphere" }),
     countryPath(name) {
       let d = countryPaths.get(name);

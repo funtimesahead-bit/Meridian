@@ -23,6 +23,11 @@ export const LazyRingGame = dynamic(() => import("@/games/rings/RingGame"), {
   loading: Loading,
 });
 
+export const LazyBorderRun = dynamic(() => import("@/games/border-run/BorderRun"), {
+  ssr: false,
+  loading: Loading,
+});
+
 export const LazyCountryQuiz = dynamic(
   () => import("@/quizzes/countries/CountryQuiz"),
   { ssr: false, loading: Loading },

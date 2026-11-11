@@ -19,9 +19,24 @@ function allowedTypos(length: number): number {
 }
 
 export default function CountryQuiz({ slug }: { slug: string }) {
-  const quiz = findQuiz(slug)!;
+  const base = findQuiz(slug)!;
+  const [withExtra, setWithExtra] = useState(false);
+  /** The quiz as played: with the extra places mixed in when that option is on. */
+  const quiz = useMemo(
+    () =>
+      withExtra && base.extra
+        ? {
+            ...base,
+            countries: [...base.countries, ...base.extra.places].sort((a, b) =>
+              a.name.localeCompare(b.name),
+            ),
+          }
+        : base,
+    [base, withExtra],
+  );
   const total = quiz.countries.length;
   const gameKey = `quiz-${quiz.slug}`;
+  const setupKey = withExtra ? "extra" : "all";
 
   const [phase, setPhase] = useState<Phase>("ready");
   const [found, setFound] = useState<Set<string>>(() => new Set());
@@ -36,7 +51,7 @@ export default function CountryQuiz({ slug }: { slug: string }) {
   } | null>(null);
 
   const clock = useStopwatch();
-  const best = useBests(gameKey).all;
+  const best = useBests(gameKey)[setupKey];
   const inputRef = useRef<HTMLInputElement>(null);
 
   /** Every accepted spelling of every country. */
@@ -70,7 +85,7 @@ export default function CountryQuiz({ slug }: { slug: string }) {
       timeMs: clock.stop(),
       date: new Date().toISOString(),
     };
-    setSummary({ result, ...saveResult(gameKey, "all", result) });
+    setSummary({ result, ...saveResult(gameKey, setupKey, result) });
     setPhase("done");
   };
 
@@ -211,9 +226,32 @@ export default function CountryQuiz({ slug }: { slug: string }) {
         {phase === "ready" && (
           <div className={styles.cover}>
             <p>
-              Name all <strong>{total}</strong> countries of {quiz.region}. The stopwatch
-              starts when you do, and there is no time limit.
+              Name all <strong>{total}</strong>{" "}
+              {withExtra ? "countries and territories" : "countries"} of {quiz.region}. The
+              stopwatch starts when you do, and there is no time limit.
             </p>
+            {base.extra && (
+              <div className={styles.variants} role="radiogroup" aria-label="What to include">
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={!withExtra}
+                  className={ui.segment}
+                  onClick={() => setWithExtra(false)}
+                >
+                  {base.extra.baseLabel} ({base.countries.length})
+                </button>
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={withExtra}
+                  className={ui.segment}
+                  onClick={() => setWithExtra(true)}
+                >
+                  {base.extra.label} ({base.countries.length + base.extra.places.length})
+                </button>
+              </div>
+            )}
             <button type="button" className={ui.startButton} onClick={start} autoFocus>
               Start
             </button>
@@ -251,9 +289,16 @@ export default function CountryQuiz({ slug }: { slug: string }) {
               </div>
             </div>
           </div>
-          <button type="button" className={ui.primaryButton} onClick={start}>
-            Play again
-          </button>
+          <div className={styles.doneActions}>
+            {base.extra && (
+              <button type="button" className={ui.ghostButton} onClick={() => setPhase("ready")}>
+                Change version
+              </button>
+            )}
+            <button type="button" className={ui.primaryButton} onClick={start}>
+              Play again
+            </button>
+          </div>
         </div>
       ) : (
         <form onSubmit={submit}>

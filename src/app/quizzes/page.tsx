@@ -27,6 +27,7 @@ export default function QuizzesPage() {
                 <span className="tag">Countries</span>
                 <span className="tag">{quiz.region}</span>
                 <span className="tag">{quiz.countries.length} answers</span>
+                {quiz.extra && <span className="tag">+ territories option</span>}
               </div>
               <div className="game-card__foot">
                 <GameBest scoreKey={`quiz-${quiz.slug}`} showSetup={false} />
