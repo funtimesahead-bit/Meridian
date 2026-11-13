@@ -241,16 +241,19 @@ let centredScene: Scene | null = null;
 /**
  * A map centred on one place, where distance from the centre is true to
  * scale in every direction. Rings drawn around the centre come out as
- * perfect circles. Shows everything within about 4,400 km.
+ * perfect circles. Shows everything within `reachKm` of the centre, plus
+ * a margin.
  */
-export function getCentredScene(lon: number, lat: number): Scene {
-  const id = `centred:${lon},${lat}`;
+export function getCentredScene(lon: number, lat: number, reachKm = 3500): Scene {
+  // Degrees of arc to show: the reach plus a quarter, kept short of the far side of the globe.
+  const reach = Math.round(Math.min(150, Math.max(25, (reachKm / 111.195) * 1.25)));
+  const id = `centred:${lon},${lat},${reach}`;
   if (centredScene?.id === id) return centredScene;
 
   const size = 1000;
   const projection = geoAzimuthalEquidistant()
     .rotate([-lon, -lat])
-    .clipAngle(40)
+    .clipAngle(reach)
     .fitExtent(
       [
         [4, 4],

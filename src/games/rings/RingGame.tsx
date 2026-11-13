@@ -43,6 +43,8 @@ const STRIKES_PER_RING = 3;
 const BIGGEST_POINTS = [100, 60, 30];
 const OUTSIDE_PENALTY = 10;
 const AUTO_ADVANCE_MS = 1400;
+/** In the biggest-city game, places this close to the centre count as part of it. */
+const SUBURB_KM = 35;
 const KM_PER_DEGREE = 111.195;
 
 const COPY = {
@@ -161,7 +163,13 @@ export default function RingGame({ mode }: { mode: AnyRingMode }) {
 
   const start = useCallback(() => {
     if (!data) return;
-    const built = buildRingGame(data, difficulty, ringCount, mode === "five" ? 7 : 3);
+    const built = buildRingGame(
+      data,
+      difficulty,
+      ringCount,
+      mode === "five" ? 7 : 3,
+      mode === "biggest" ? SUBURB_KM : 1,
+    );
     setGame(built);
     setStates(built.rings.map(emptyRing));
     setRingIndex(0);
@@ -241,6 +249,11 @@ export default function RingGame({ mode }: { mode: AnyRingMode }) {
       return;
     }
 
+    if (reading.kind === "elsewhere" && reading.km < game.excludeKm) {
+      complain(`${reading.city.name} is part of the centre city's area. It does not count.`);
+      setGuess("");
+      return;
+    }
     if (reading.kind === "elsewhere") {
       const inner = ringIndex * game.stepKm;
       const where =
@@ -297,7 +310,9 @@ export default function RingGame({ mode }: { mode: AnyRingMode }) {
       updateRing((s) => ({ ...s, wrong, done: "failed" }));
     } else {
       complain(
-        `${city.name} (${formatPopulation(city.population)}) is in the ring, but there is a bigger city.`,
+        difficulty === "hard"
+          ? `${city.name} is not the biggest city in the ring.`
+          : `${city.name} is #${ring.indexOf(city) + 1} in this ring.`,
       );
       updateRing((s) => ({ ...s, wrong }));
     }
@@ -391,7 +406,10 @@ export default function RingGame({ mode }: { mode: AnyRingMode }) {
 
   // A map centred on the chosen city, so the rings are true circles.
   const scene = useMemo(
-    () => (game ? getCentredScene(game.centre.lon, game.centre.lat) : "world"),
+    () =>
+      game
+        ? getCentredScene(game.centre.lon, game.centre.lat, game.stepKm * game.rings.length)
+        : "world",
     [game],
   );
 
@@ -437,11 +455,13 @@ export default function RingGame({ mode }: { mode: AnyRingMode }) {
                   <span className="mono">60</span> second, <span className="mono">30</span> third
                 </>,
                 "A city in the ring that is not the biggest costs a strike; three strikes and the ring is lost",
+                "On Easy and Medium a wrong city tells you where it ranks in the ring",
+                "After each ring, its five biggest cities are listed on the map",
                 <>
                   A city outside the ring is not a strike, but costs{" "}
                   <span className="mono">{OUTSIDE_PENALTY}</span> points
                 </>,
-                "The centre city itself never counts",
+                `The centre city and its suburbs (within ${SUBURB_KM} km) never count`,
               ]
         }
       >
@@ -530,6 +550,8 @@ export default function RingGame({ mode }: { mode: AnyRingMode }) {
       ? `within ${game.stepKm} km of ${centreLabel}`
       : `between ${ringIndex * game.stepKm} and ${(ringIndex + 1) * game.stepKm} km from ${centreLabel}`;
   const revealed = revealedFor(ringIndex);
+  /** The ring whose top cities are listed: this one once it is over, else the one before. */
+  const finishedIndex = state.done ? ringIndex : ringIndex - 1;
 
   return (
     <div className={ui.game}>
@@ -552,7 +574,7 @@ export default function RingGame({ mode }: { mode: AnyRingMode }) {
       />
 
       {/* Dragging or zooming the map must not pull the keyboard out of the answer box. */}
-      <div onMouseDown={(event) => event.preventDefault()}>
+      <div className={styles.mapWrap} onMouseDown={(event) => event.preventDefault()}>
         <MapCanvas
           scene={scene}
           shapes={shapes}
@@ -560,6 +582,22 @@ export default function RingGame({ mode }: { mode: AnyRingMode }) {
           focus={focus}
           ariaLabel="Blank map with a ring drawn around a city"
         />
+        {mode === "biggest" && finishedIndex >= 0 && (
+          <aside className={styles.topList} aria-live="polite">
+            <h2>
+              Ring {finishedIndex + 1} · biggest cities
+              <span>{rangeLabel(finishedIndex)}</span>
+            </h2>
+            <ol>
+              {game.rings[finishedIndex].slice(0, 5).map((city) => (
+                <li key={city.id}>
+                  <span className={styles.topName}>{city.name}</span>
+                  <span className="mono">{formatPopulation(city.population)}</span>
+                </li>
+              ))}
+            </ol>
+          </aside>
+        )}
       </div>
 
       <form className={ui.answer} onSubmit={submit}>

@@ -32,3 +32,87 @@
   color: var(--good);
   font-weight: 600;
 }
+
+.mapWrap {
+  position: relative;
+}
+
+/* Top five cities of the ring just finished. */
+.topList {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: min(230px, calc(100% - 24px));
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+}
+
+.topList h2 {
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.topList h2 span {
+  display: block;
+  margin-top: 1px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.topList ol {
+  margin: 7px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: place;
+  display: grid;
+  gap: 3px;
+  font-size: 13.5px;
+}
+
+.topList li {
+  counter-increment: place;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.topList li::before {
+  content: counter(place);
+  width: 12px;
+  color: var(--faint);
+  font-size: 12px;
+}
+
+.topList li:first-child .topName {
+  color: var(--good);
+  font-weight: 600;
+}
+
+.topName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topList :global(.mono) {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+@media (max-width: 560px) {
+  .topList {
+    top: 8px;
+    left: 8px;
+    width: 180px;
+    padding: 8px 10px;
+  }
+}

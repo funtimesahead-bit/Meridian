@@ -65,15 +65,17 @@ export const RING_RULES: Record<
   Difficulty,
   { stepKm: number; minPopulation: number; maxPopulation: number; centreNamed: boolean }
 > = {
-  easy: { stepKm: 420, minPopulation: 1_000_000, maxPopulation: Infinity, centreNamed: true },
-  medium: { stepKm: 245, minPopulation: 200_000, maxPopulation: 1_000_000, centreNamed: true },
-  hard: { stepKm: 140, minPopulation: 40_000, maxPopulation: 200_000, centreNamed: false },
+  easy: { stepKm: 840, minPopulation: 1_000_000, maxPopulation: Infinity, centreNamed: true },
+  medium: { stepKm: 490, minPopulation: 200_000, maxPopulation: 1_000_000, centreNamed: true },
+  hard: { stepKm: 280, minPopulation: 40_000, maxPopulation: 200_000, centreNamed: false },
 };
 
 export type RingGame = {
   centre: RingCity;
   stepKm: number;
   centreNamed: boolean;
+  /** Places closer to the centre than this are its own suburbs and are left out. */
+  excludeKm: number;
   /** Cities in each ring, biggest first. Ring 0 is the inner circle. */
   rings: RingCity[][];
 };
@@ -99,14 +101,17 @@ function centreCandidates(data: CityData, difficulty: Difficulty): RingCity[] {
         Math.abs(c.lat) < 66,
     );
   } else {
-    // Match each famous city to the biggest place in the data within 25 km.
+    // Match each famous city to its entry in the data: the place of that name
+    // within 25 km, or failing that the biggest place there.
     const found = new Set<RingCity>();
     for (const famous of CITY_POOLS[difficulty]) {
-      const match = data.cities.find(
+      const nearby = data.cities.filter(
         (c) =>
           Math.abs(c.lat - famous.lat) < 0.3 &&
           distanceKm(famous.lon, famous.lat, c.lon, c.lat) < 25,
       );
+      const names = [famous.name, ...famous.alt].map(normalize);
+      const match = nearby.find((c) => c.keys.some((k) => names.includes(k))) ?? nearby[0];
       if (match) found.add(match);
     }
     list = [...found];
@@ -124,6 +129,7 @@ export function buildRingGame(
   difficulty: Difficulty,
   ringCount: number,
   minPerRing: number,
+  excludeKm = 1,
 ): RingGame {
   const rules = RING_RULES[difficulty];
   const candidates = centreCandidates(data, difficulty);
@@ -138,8 +144,8 @@ export function buildRingGame(
     for (const city of data.cities) {
       if (city === centre || Math.abs(city.lat - centre.lat) > latWindow) continue;
       const km = distanceKm(centre.lon, centre.lat, city.lon, city.lat);
-      // Skip duplicate entries for the centre itself.
-      if (km < 1 || km >= maxKm) continue;
+      // Skip the centre's own duplicates and, when asked, its suburbs.
+      if (km < excludeKm || km >= maxKm) continue;
       rings[Math.floor(km / rules.stepKm)].push(city);
     }
     const weakest = Math.min(...rings.map((r) => r.length));
@@ -153,6 +159,7 @@ export function buildRingGame(
     centre: chosen.centre,
     stepKm: rules.stepKm,
     centreNamed: rules.centreNamed,
+    excludeKm,
     rings: chosen.rings,
   };
 }
