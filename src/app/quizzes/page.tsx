@@ -15,6 +15,27 @@ export default function QuizzesPage() {
       </div>
 
       <div className="card-grid">
+        <Link href="/quizzes/quick-fire" className="game-card">
+          <div className="game-card__art">
+            <CardArt kind="quickfire" />
+          </div>
+          <div className="game-card__body">
+            <h2 className="game-card__title">Quick Fire</h2>
+            <p className="game-card__blurb">
+              Ten quick questions with lots of right answers. Type the first one that comes to
+              mind.
+            </p>
+            <div className="tag-row">
+              <span className="tag">Mixed</span>
+              <span className="tag">15 s each</span>
+              <span className="tag">Replayable</span>
+            </div>
+            <div className="game-card__foot">
+              <GameBest scoreKey="quickfire" showSetup={false} />
+              <span className="play-pill">Start</span>
+            </div>
+          </div>
+        </Link>
         {COUNTRY_QUIZZES.map((quiz) => (
           <Link key={quiz.slug} href={`/quizzes/${quiz.slug}`} className="game-card">
             <div className="game-card__art">

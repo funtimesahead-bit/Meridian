@@ -1,28 +1,29 @@
-import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
+import {
+  ANSWER_ID,
+  KEEP_SECONDS,
+  PLAYER_ID,
+  PROMPT_ID,
+  connect,
+  rarityKey,
+  rarityPlayersKey,
+} from "@/lib/server/redis";
 
-/* Answer counts for the daily Expedition, kept in Upstash Redis.
+/* The daily Expedition.
 
-   GET  /api/expedition?day=YYYY-MM-DD   -> how many players gave each answer
-   POST /api/expedition { day, player, answers } -> record one finished run
+   GET  /api/expedition?prompts=id1,id2,...
+        -> for each prompt, how many Quick Fire players gave each answer.
+           Rarity comes from Quick Fire only (see src/lib/server/redis.ts).
+   POST /api/expedition { day, player, answers }
+        -> stores one finished Expedition run under its own keys, for
+           reference. It does not change any rarity.
 
-   Without Redis settings the game still works; it just uses the hand-set
-   rarities. */
+   Without Redis settings the game still works on hand-set rarities. */
 
 export const dynamic = "force-dynamic";
 
 const STOPS = 8;
-const KEEP_SECONDS = 400 * 24 * 60 * 60;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
-const ANSWER_ID = /^[a-z0-9]{1,48}$/;
-const PLAYER_ID = /^[a-z0-9-]{8,64}$/;
-
-function connect(): Redis | null {
-  // Vercel's Upstash integration may name these either way.
-  const url = process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN ?? process.env.UPSTASH_REDIS_REST_TOKEN;
-  return url && token ? new Redis({ url, token }) : null;
-}
 
 const playersKey = (day: string) => `exp:${day}:players`;
 const stopKey = (day: string, stop: number) => `exp:${day}:s${stop}`;
@@ -34,28 +35,33 @@ function isCurrentDay(day: string): boolean {
 }
 
 export async function GET(request: Request) {
-  const day = new URL(request.url).searchParams.get("day") ?? "";
-  if (!DAY.test(day)) {
-    return NextResponse.json({ error: "Bad day" }, { status: 400 });
+  const ids = (new URL(request.url).searchParams.get("prompts") ?? "")
+    .split(",")
+    .filter(Boolean);
+  if (ids.length === 0 || ids.length > 12 || !ids.every((id) => PROMPT_ID.test(id))) {
+    return NextResponse.json({ error: "Bad prompts" }, { status: 400 });
   }
   const redis = connect();
-  if (!redis) return NextResponse.json({ live: false, players: 0, stops: [] });
+  if (!redis) return NextResponse.json({ live: false, counts: [], players: [] });
 
   try {
     const pipe = redis.pipeline();
-    pipe.scard(playersKey(day));
-    for (let i = 0; i < STOPS; i++) pipe.hgetall(stopKey(day, i));
-    const [players, ...stops] = await pipe.exec();
+    for (const id of ids) {
+      pipe.hgetall(rarityKey(id));
+      pipe.scard(rarityPlayersKey(id));
+    }
+    const results = await pipe.exec();
+    const counts = ids.map((_, i) => {
+      const c = results[i * 2];
+      return c && typeof c === "object" ? c : {};
+    });
+    const players = ids.map((_, i) => Number(results[i * 2 + 1]) || 0);
     return NextResponse.json(
-      {
-        live: true,
-        players: Number(players) || 0,
-        stops: stops.map((s) => (s && typeof s === "object" ? s : {})),
-      },
+      { live: true, counts, players },
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch {
-    return NextResponse.json({ live: false, players: 0, stops: [] });
+    return NextResponse.json({ live: false, counts: [], players: [] });
   }
 }
 

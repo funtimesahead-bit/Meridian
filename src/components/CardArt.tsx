@@ -9,7 +9,7 @@ const DIM_DOTS: [number, number][] = [
 const AMBER = "#f6b73c";
 const DIM = "#3a4c62";
 
-export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "borders" | "route" | "trail" }) {
+export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "borders" | "route" | "trail" | "quickfire" }) {
   return (
     <svg viewBox="0 0 320 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       {kind !== "borders" && kind !== "route" &&
@@ -65,6 +65,20 @@ export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "bo
               <circle cx="176" cy="30" r="3" fill="#8fa1b5" />
             </>
           )}
+        </>
+      )}
+
+      {kind === "quickfire" && (
+        <>
+          <circle cx="160" cy="80" r="46" fill="none" stroke="#32425a" strokeWidth="6" />
+          <path
+            d="M160 34 A46 46 0 0 1 205 88"
+            fill="none"
+            stroke={AMBER}
+            strokeWidth="6"
+            strokeLinecap="round"
+          />
+          <path d="M150 58 L172 58 L158 82 L174 82 L144 112 L154 88 L140 88 Z" fill={AMBER} />
         </>
       )}
 

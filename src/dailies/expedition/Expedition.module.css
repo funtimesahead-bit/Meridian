@@ -28,6 +28,14 @@
   font-size: 14.5px;
 }
 
+.muted a {
+  color: var(--accent);
+}
+
+.muted a:hover {
+  text-decoration: underline;
+}
+
 .lede {
   font-size: 17px;
   color: var(--muted);

@@ -33,6 +33,11 @@ export const LazyExpedition = dynamic(() => import("@/dailies/expedition/Expedit
   loading: Loading,
 });
 
+export const LazyQuickFire = dynamic(() => import("@/quizzes/quickfire/QuickFire"), {
+  ssr: false,
+  loading: Loading,
+});
+
 export const LazyCountryQuiz = dynamic(
   () => import("@/quizzes/countries/CountryQuiz"),
   { ssr: false, loading: Loading },

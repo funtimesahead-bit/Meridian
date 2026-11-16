@@ -6,6 +6,7 @@ import MapCanvas, { type MapCountry, type MapMarker, type MapShape } from "@/com
 import { gameStyles as ui } from "@/components/game/GameUi";
 import { labelPoint } from "@/games/border-run/graph";
 import { loadCities } from "@/games/rings/data";
+import { playerId } from "@/lib/player";
 import {
   STOPS,
   expeditionNumber,
@@ -48,11 +49,11 @@ type Saved = {
   sent: boolean;
 };
 
-type Stats = { live: boolean; players: number; stops: StopCounts[] };
+/** Quick Fire answer counts for each of today's prompts, in stop order. */
+type Stats = { live: boolean; counts: StopCounts[]; players: number[] };
 
 type Phase = "loading" | "error" | "intro" | "playing" | "reveal" | "done";
 
-const PLAYER_KEY = "meridian.expedition.player";
 const saveKey = (day: string) => `meridian.expedition.v1.${day}`;
 
 function readSaved(day: string): Saved {
@@ -80,21 +81,6 @@ function writeSaved(day: string, saved: Saved) {
   }
 }
 
-function playerId(): string {
-  try {
-    let id = window.localStorage.getItem(PLAYER_KEY);
-    if (!id) {
-      id =
-        typeof crypto !== "undefined" && "randomUUID" in crypto
-          ? crypto.randomUUID()
-          : `p-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
-      window.localStorage.setItem(PLAYER_KEY, id);
-    }
-    return id.toLowerCase();
-  } catch {
-    return `p-${Math.random().toString(36).slice(2, 14)}`;
-  }
-}
 
 function percent(share: number): string {
   const p = share * 100;
@@ -124,7 +110,7 @@ export default function Expedition() {
   const [day] = useState(today);
   const [phase, setPhase] = useState<Phase>("loading");
   const [prompts, setPrompts] = useState<Prompt[]>([]);
-  const [stats, setStats] = useState<Stats>({ live: false, players: 0, stops: [] });
+  const [stats, setStats] = useState<Stats>({ live: false, counts: [], players: [] });
   const [saved, setSaved] = useState<Saved>({ stops: [], startedAt: null, sent: false });
   const [now, setNow] = useState(() => Date.now());
   const [guess, setGuess] = useState("");
@@ -151,16 +137,18 @@ export default function Expedition() {
 
   useEffect(() => {
     let cancelled = false;
-    const statsRequest = fetch(`/api/expedition?day=${day}`)
-      .then((r) => (r.ok ? (r.json() as Promise<Stats>) : null))
-      .catch(() => null);
-
-    Promise.all([loadCities(), statsRequest])
-      .then(([cities, loaded]) => {
-        if (cancelled) return;
+    loadCities()
+      .then(async (cities) => {
         const todays = promptsForDay(day, cities);
+        // Rarity comes from Quick Fire answers to these prompts.
+        const loaded = await fetch(
+          `/api/expedition?prompts=${todays.map((p) => p.id).join(",")}`,
+        )
+          .then((r) => (r.ok ? (r.json() as Promise<Stats>) : null))
+          .catch(() => null);
+        if (cancelled) return;
         setPrompts(todays);
-        if (loaded) setStats(loaded);
+        if (loaded?.live) setStats(loaded);
         let restored = readSaved(day);
         if (restored.stops.some((s, i) => s.promptId !== todays[i]?.id)) {
           // The prompt bank changed since this run was saved; start it again.
@@ -204,7 +192,7 @@ export default function Expedition() {
         tier: null,
       };
       if (answer) {
-        const share = shares(prompt, stats.stops[index])?.get(answer.id) ?? 0;
+        const share = shares(prompt, stats.counts[index])?.get(answer.id) ?? 0;
         result = {
           promptId: prompt.id,
           answerId: answer.id,
@@ -219,7 +207,7 @@ export default function Expedition() {
       setNotice(null);
       setPhase("reveal");
     },
-    [index, prompt, saved, stats.stops, update],
+    [index, prompt, saved, stats.counts, update],
   );
 
   // Out of time: the stop scores nothing.
@@ -364,7 +352,9 @@ export default function Expedition() {
     );
   }
 
-  const estimated = !stats.live || stats.players < LIVE_THRESHOLD;
+  /** Whether a stop's rarities are still mostly the hand-set estimates. */
+  const estimatedAt = (stop: number) => !stats.live || (stats.players[stop] ?? 0) < LIVE_THRESHOLD;
+  const estimatedStops = saved.stops.filter((_, i) => estimatedAt(i)).length;
   const map = (
     <div onMouseDown={(event) => event.preventDefault()}>
       <MapCanvas
@@ -462,9 +452,10 @@ export default function Expedition() {
           ))}
         </ol>
         <p className={styles.muted}>
-          {estimated
-            ? "Rarities are estimates for now. They become real percentages once enough explorers have played today."
-            : `Rarities are based on ${stats.players} explorers today.`}
+          Rarities come from how often people give each answer in{" "}
+          <Link href="/quizzes/quick-fire">Quick Fire</Link>, where nobody is trying to be rare.
+          {estimatedStops > 0 &&
+            ` ${estimatedStops === STOPS ? "All" : estimatedStops} of today’s stops still use estimates, until ${LIVE_THRESHOLD} people have answered them there.`}
         </p>
         {map}
       </div>
@@ -475,7 +466,7 @@ export default function Expedition() {
 
   const last = phase === "reveal" ? saved.stops[index - 1] : null;
   const shown = phase === "reveal" ? prompts[index - 1] : prompt;
-  const shownShares = shown ? shares(shown, stats.stops[phase === "reveal" ? index - 1 : index]) : null;
+  const shownShares = shown ? shares(shown, stats.counts[phase === "reveal" ? index - 1 : index]) : null;
   const top = shown
     ? [...shown.answers]
         .sort((a, b) => (shownShares!.get(b.id) ?? 0) - (shownShares!.get(a.id) ?? 0))
@@ -548,7 +539,7 @@ export default function Expedition() {
                     <>
                       <strong>{last.name}</strong>
                       <span>
-                        {estimated ? "about " : ""}
+                        {estimatedAt(index - 1) ? "about " : ""}
                         {percent(last.share)} of explorers
                       </span>
                     </>
