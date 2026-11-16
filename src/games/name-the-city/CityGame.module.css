@@ -285,6 +285,8 @@
   max-width: var(--page-width);
   margin: 0 auto;
   padding: 16px var(--gutter) 40px;
+  /* Stop a map's minimum height from widening the column past the screen. */
+  grid-template-columns: minmax(0, 1fr);
   display: grid;
   gap: 10px;
 }

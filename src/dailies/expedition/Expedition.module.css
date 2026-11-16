@@ -1,0 +1,368 @@
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 20px var(--gutter) 64px;
+  /* Stop the map's minimum height from widening the column past the screen. */
+  grid-template-columns: minmax(0, 1fr);
+  display: grid;
+  gap: 16px;
+}
+
+.head > a {
+  margin-bottom: 6px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 680;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.title :global(.mono) {
+  color: var(--accent);
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 14.5px;
+}
+
+.lede {
+  font-size: 17px;
+  color: var(--muted);
+  max-width: 58ch;
+}
+
+.intro {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.intro ul :global(.mono) {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ---- Progress ---- */
+
+.stops {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stopDot {
+  width: 22px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+
+.stopDot.current {
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.runningTotal {
+  margin-left: auto;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ---- Tier colours, shared by dots and badges ---- */
+
+.common {
+  --tier: #c9d3df;
+}
+
+.uncommon {
+  --tier: #5aa9ff;
+}
+
+.rare {
+  --tier: #b18cff;
+}
+
+.legendary {
+  --tier: var(--accent);
+}
+
+.missed {
+  --tier: #4a5666;
+}
+
+.stopDot.common,
+.stopDot.uncommon,
+.stopDot.rare,
+.stopDot.legendary,
+.stopDot.missed {
+  background: var(--tier);
+  box-shadow: none;
+}
+
+.tier {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  color: var(--tier);
+  background: color-mix(in srgb, var(--tier) 16%, transparent);
+  white-space: nowrap;
+}
+
+/* ---- The current stop ---- */
+
+.card {
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 14px;
+}
+
+.kicker {
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.prompt {
+  font-size: 26px;
+  font-weight: 660;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+.timer {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.timerFill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 100ms linear;
+}
+
+.timerLow {
+  background: var(--bad);
+}
+
+.status {
+  display: flex;
+  gap: 14px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.notice {
+  color: var(--text);
+}
+
+.reveal {
+  display: grid;
+  gap: 14px;
+  animation: rise 180ms ease-out;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.revealMain {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.revealAnswer {
+  flex: 1;
+  display: grid;
+  min-width: 0;
+}
+
+.revealAnswer strong {
+  font-size: 20px;
+  font-weight: 650;
+}
+
+.revealAnswer span {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.revealPoints {
+  font-size: 28px;
+  font-weight: 650;
+}
+
+.topAnswers {
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.topAnswers p {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.topAnswers ol {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+  font-size: 14.5px;
+}
+
+.topAnswers li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.topAnswers li :global(.mono) {
+  color: var(--muted);
+}
+
+.reveal > button {
+  justify-self: end;
+}
+
+/* ---- Results ---- */
+
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.total {
+  font-size: 56px;
+  font-weight: 680;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.totalMax {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--faint);
+}
+
+.squares {
+  margin-top: 8px;
+  font-size: 24px;
+  letter-spacing: 2px;
+}
+
+.summaryActions {
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+}
+
+.stopList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.stopList li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+}
+
+.stopList li + li {
+  border-top: 1px solid var(--border);
+}
+
+.stopNumber {
+  width: 16px;
+  color: var(--faint);
+  font-size: 13px;
+}
+
+.stopPrompt {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.stopPrompt strong {
+  font-size: 15px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.stopPoints {
+  width: 40px;
+  text-align: right;
+  font-weight: 600;
+}
+
+@media (max-width: 560px) {
+  .title {
+    font-size: 23px;
+  }
+
+  .prompt {
+    font-size: 21px;
+  }
+
+  .card,
+  .intro,
+  .summary {
+    padding: 16px;
+  }
+
+  .stopDot {
+    width: 16px;
+  }
+
+  .stopList .tier {
+    display: none;
+  }
+
+  .summaryActions {
+    justify-items: start;
+  }
+}

@@ -28,6 +28,11 @@ export const LazyBorderRun = dynamic(() => import("@/games/border-run/BorderRun"
   loading: Loading,
 });
 
+export const LazyExpedition = dynamic(() => import("@/dailies/expedition/Expedition"), {
+  ssr: false,
+  loading: Loading,
+});
+
 export const LazyCountryQuiz = dynamic(
   () => import("@/quizzes/countries/CountryQuiz"),
   { ssr: false, loading: Loading },

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CardArt } from "@/components/CardArt";
+import { ExpeditionStatus } from "@/components/ExpeditionStatus";
 
 export const metadata: Metadata = { title: "Dailies" };
 
@@ -11,13 +13,28 @@ export default function DailiesPage() {
         <p>One fresh challenge a day, the same for everyone.</p>
       </div>
 
-      <div className="empty">
-        <h2>No dailies yet</h2>
-        <p>
-          Daily challenges will show up here once they are built. Until then,
-          the Games tab has something to play.
-        </p>
-        <Link href="/games">Go to Games →</Link>
+      <div className="card-grid">
+        <Link href="/dailies/expedition" className="game-card">
+          <div className="game-card__art">
+            <CardArt kind="trail" />
+          </div>
+          <div className="game-card__body">
+            <h2 className="game-card__title">Expedition</h2>
+            <p className="game-card__blurb">
+              Eight stops, one answer each. Anyone can name the obvious answer; the rarer
+              yours is, the more it scores.
+            </p>
+            <div className="tag-row">
+              <span className="tag">Daily</span>
+              <span className="tag">Rarity</span>
+              <span className="tag">Typing</span>
+            </div>
+            <div className="game-card__foot">
+              <ExpeditionStatus />
+              <span className="play-pill">Play</span>
+            </div>
+          </div>
+        </Link>
       </div>
     </main>
   );

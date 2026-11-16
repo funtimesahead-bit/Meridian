@@ -9,7 +9,7 @@ const DIM_DOTS: [number, number][] = [
 const AMBER = "#f6b73c";
 const DIM = "#3a4c62";
 
-export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "borders" | "route" }) {
+export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "borders" | "route" | "trail" }) {
   return (
     <svg viewBox="0 0 320 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       {kind !== "borders" && kind !== "route" &&
@@ -65,6 +65,30 @@ export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "bo
               <circle cx="176" cy="30" r="3" fill="#8fa1b5" />
             </>
           )}
+        </>
+      )}
+
+      {kind === "trail" && (
+        <>
+          <path
+            d="M40 118 L92 62 L146 96 L188 40 L232 88 L282 54"
+            fill="none"
+            stroke="#e8edf2"
+            strokeWidth="1.5"
+            strokeDasharray="5 5"
+            opacity="0.7"
+          />
+          {[
+            [40, 118, "#c9d3df"],
+            [92, 62, "#5aa9ff"],
+            [146, 96, "#c9d3df"],
+            [188, 40, "#b18cff"],
+            [232, 88, "#5aa9ff"],
+          ].map(([x, y, fill]) => (
+            <circle key={`${x}-${y}`} cx={x} cy={y} r="5" fill={fill as string} />
+          ))}
+          <circle cx="282" cy="54" r="16" fill={AMBER} opacity="0.18" />
+          <circle cx="282" cy="54" r="7" fill={AMBER} />
         </>
       )}
 
