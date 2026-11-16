@@ -3,11 +3,16 @@ import type { Answer, Prompt } from "./prompts";
 
 /* How rare an answer is, and what it is worth.
 
-   Each prompt starts with PRIOR_PLAYERS imaginary players spread across the
-   answers by their hand-set weights. Real players' answers are added on top,
-   so as more people play, the real numbers take over. */
+   An answer's share mixes two things: the hand-set weights (a judgement of
+   how commonly each answer comes to mind) and real Quick Fire answers.
+   With little data the weights lead. As data comes in it gains influence,
+   but the weights never drop below JUDGEMENT_FLOOR, because a small
+   player base can be lopsided. */
 
+/** How many players' worth of data the hand-set weights count as. */
 export const PRIOR_PLAYERS = 30;
+/** The least say the hand-set weights ever have, however much data there is. */
+export const JUDGEMENT_FLOOR = 0.4;
 export const MAX_POINTS = 100;
 
 /** Below this many real players, rarities are shown as estimates. */
@@ -30,13 +35,19 @@ export type StopCounts = Record<string, number>;
 /** Share of players (0 to 1) expected to give each answer. */
 export function shares(prompt: Prompt, counts: StopCounts = {}): Map<string, number> {
   const totalWeight = prompt.answers.reduce((sum, a) => sum + a.weight, 0);
-  const realTotal = prompt.answers.reduce((sum, a) => sum + (counts[a.id] ?? 0), 0);
-  const all = PRIOR_PLAYERS + realTotal;
+  const realTotal = prompt.answers.reduce((sum, a) => sum + (Number(counts[a.id]) || 0), 0);
+  // How much the hand-set weights count: all of it with no data, falling
+  // as data arrives, but never below the floor.
+  const judgement =
+    realTotal === 0
+      ? 1
+      : Math.max(JUDGEMENT_FLOOR, PRIOR_PLAYERS / (PRIOR_PLAYERS + realTotal));
   return new Map(
-    prompt.answers.map((a) => [
-      a.id,
-      ((PRIOR_PLAYERS * a.weight) / totalWeight + (counts[a.id] ?? 0)) / all,
-    ]),
+    prompt.answers.map((a) => {
+      const guessed = a.weight / totalWeight;
+      const observed = realTotal ? (Number(counts[a.id]) || 0) / realTotal : 0;
+      return [a.id, judgement * guessed + (1 - judgement) * observed];
+    }),
   );
 }
 

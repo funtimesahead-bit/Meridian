@@ -270,6 +270,116 @@ button {
   font-weight: 600;
 }
 
+/* A card that opens a popup instead of a page. */
+.game-card--button {
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+.play-pill--off {
+  background: var(--surface-2);
+  color: var(--muted);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+
+/* ---------- Popup ---------- */
+
+.popup {
+  width: min(460px, calc(100vw - 32px));
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+.popup::backdrop {
+  background: rgba(5, 8, 12, 0.78);
+}
+
+.popup[open] {
+  animation: popup-in 160ms ease-out;
+}
+
+@keyframes popup-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+
+.popup__body {
+  padding: 24px;
+  display: grid;
+  gap: 14px;
+}
+
+.popup__body h1,
+.popup__body h2 {
+  font-size: 21px;
+  font-weight: 680;
+  letter-spacing: -0.015em;
+}
+
+.popup__body p {
+  color: var(--muted);
+}
+
+.popup__body--page {
+  max-width: 520px;
+  margin: 40px auto 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.popup__actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.popup__actions form {
+  margin: 0;
+}
+
+.popup__primary,
+.popup__secondary {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.popup__primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.popup__primary:hover {
+  filter: brightness(1.08);
+}
+
+.popup__secondary {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.popup__secondary:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
 /* ---------- Empty state ---------- */
 
 .empty {
