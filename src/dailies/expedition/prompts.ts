@@ -2,6 +2,7 @@ import { normalize } from "@/games/name-the-city/match";
 import { SHAPE_NEIGHBOURS } from "@/lib/geo/world";
 import { worldCountry, WORLD_COUNTRIES, type Fame, type WorldCountry } from "@/lib/geo/countries";
 import type { CityData } from "@/games/rings/data";
+import { BROAD_PROMPTS } from "./broad";
 
 /* The Expedition's prompts. Every prompt has a complete list of valid
    answers, each with a starting guess at how often players will pick it
@@ -13,6 +14,8 @@ export type Answer = {
   name: string;
   /** Normalised spellings that count as this answer. */
   keys: string[];
+  /** Spellings to forgive typos against, when not all of `keys` should be. */
+  typoKeys?: string[];
   /** Relative chance a player picks this, before any real data. */
   weight: number;
   /** Where to mark this answer on the map. */
@@ -24,6 +27,8 @@ export type Prompt = {
   id: string;
   text: string;
   kind: "list" | "borders" | "letter" | "cities";
+  /** Prompts in the same group (e.g. "rivers") never appear together. */
+  group?: string;
   answers: Answer[];
 };
 
@@ -341,6 +346,9 @@ export function cityPrompts(data: CityData): Prompt[] {
         id,
         name: city.name,
         keys: city.keys,
+        // Forgive typos only on the main names, not obscure historic ones
+        // (Calgary's "Calgaria" would otherwise accept "Bulgaria").
+        typoKeys: city.keys.slice(0, 2),
         // The biggest cities come to mind first.
         weight: Math.max(1, 12 - rank * 1.5),
         point: [city.lon, city.lat],
@@ -359,6 +367,9 @@ export function cityPrompts(data: CityData): Prompt[] {
 /* ---------- Picking today's eight ---------- */
 
 export const STOPS = 8;
+
+/** Expedition needs room for rare answers; smaller prompts stay in Quick Fire only. */
+export const MIN_EXPEDITION_ANSWERS = 10;
 
 /** How many prompts of each kind one day may use. */
 const KIND_LIMITS: Record<Prompt["kind"], number> = {
@@ -379,9 +390,15 @@ function hash(text: string): number {
 
 let staticPrompts: Prompt[] | null = null;
 
+/** Every spelling of every answer in the bank, so a real name is never read as a typo of another. */
+export const KNOWN_NAMES = new Set<string>();
+
 export function allPrompts(data: CityData | null): Prompt[] {
-  staticPrompts ??= [...LIST_PROMPTS, ...borderPrompts(), ...letterPrompts()];
-  return data ? [...staticPrompts, ...cityPrompts(data)] : staticPrompts;
+  staticPrompts ??= [...LIST_PROMPTS, ...BROAD_PROMPTS, ...borderPrompts(), ...letterPrompts()];
+  const all = data ? [...staticPrompts, ...cityPrompts(data)] : staticPrompts;
+  for (const prompt of all) for (const a of prompt.answers) for (const k of a.keys) KNOWN_NAMES.add(k);
+  for (const c of WORLD_COUNTRIES) for (const k of [c.name, ...c.aliases]) KNOWN_NAMES.add(normalize(k));
+  return all;
 }
 
 /**
@@ -391,12 +408,17 @@ export function allPrompts(data: CityData | null): Prompt[] {
  */
 export function promptsForDay(day: string, data: CityData | null): Prompt[] {
   const rank = (prompt: Prompt) => hash(`meridian-expedition|${day}|${prompt.id}`);
-  const pool = [...allPrompts(data)].sort((a, b) => rank(a) - rank(b) || a.id.localeCompare(b.id));
+  const pool = allPrompts(data)
+    .filter((p) => p.answers.length >= MIN_EXPEDITION_ANSWERS)
+    .sort((a, b) => rank(a) - rank(b) || a.id.localeCompare(b.id));
+  const groups = new Set<string>();
   const used: Record<Prompt["kind"], number> = { list: 0, borders: 0, letter: 0, cities: 0 };
   const picked: Prompt[] = [];
   for (const prompt of pool) {
     if (used[prompt.kind] >= KIND_LIMITS[prompt.kind]) continue;
+    if (prompt.group && groups.has(prompt.group)) continue;
     used[prompt.kind]++;
+    if (prompt.group) groups.add(prompt.group);
     picked.push(prompt);
     if (picked.length === STOPS) break;
   }

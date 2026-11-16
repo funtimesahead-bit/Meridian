@@ -1,5 +1,6 @@
 import { editDistance, normalize } from "@/games/name-the-city/match";
-import type { Answer, Prompt } from "./prompts";
+import { KNOWN_NAMES, type Answer, type Prompt } from "./prompts";
+import { variants } from "./broad";
 
 /* How rare an answer is, and what it is worth.
 
@@ -74,13 +75,19 @@ function allowedTypos(length: number): number {
 export function matchAnswer(prompt: Prompt, text: string): Answer | null {
   const key = normalize(text);
   if (!key) return null;
-  const exact = prompt.answers.find((a) => a.keys.includes(key));
-  if (exact) return exact;
+  // "The Nile", "Mt Fuji" and "River Thames" should find Nile, Fuji and Thames.
+  const typed = [...new Set(variants(text.trim()).map(normalize).filter(Boolean))];
+  for (const k of typed) {
+    const exact = prompt.answers.find((a) => a.keys.includes(k));
+    if (exact) return exact;
+  }
+  // A real name of something else is a wrong answer, not a typo.
+  if (typed.some((k) => KNOWN_NAMES.has(k))) return null;
 
   let best: Answer | null = null;
   let bestDistance = Infinity;
   for (const answer of prompt.answers) {
-    for (const k of answer.keys) {
+    for (const k of answer.typoKeys ?? answer.keys) {
       const budget = allowedTypos(k.length);
       if (budget === 0 || Math.abs(k.length - key.length) > budget) continue;
       const d = editDistance(key, k);

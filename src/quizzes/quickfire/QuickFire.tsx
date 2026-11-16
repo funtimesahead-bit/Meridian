@@ -34,9 +34,12 @@ function pickQuestions(pool: Prompt[]): Prompt[] {
   const used: Record<Prompt["kind"], number> = { list: 0, borders: 0, letter: 0, cities: 0 };
   const limit: Record<Prompt["kind"], number> = { list: QUESTIONS, borders: 2, letter: 2, cities: 2 };
   const picked: Prompt[] = [];
+  const groups = new Set<string>();
   for (const prompt of copy) {
     if (used[prompt.kind] >= limit[prompt.kind]) continue;
+    if (prompt.group && groups.has(prompt.group)) continue;
     used[prompt.kind]++;
+    if (prompt.group) groups.add(prompt.group);
     picked.push(prompt);
     if (picked.length === QUESTIONS) break;
   }
