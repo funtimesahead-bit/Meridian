@@ -27,6 +27,7 @@ export default function CountryQuiz({ slug }: { slug: string }) {
       withExtra && base.extra
         ? {
             ...base,
+            scene: base.extra.scene ?? base.scene,
             countries: [...base.countries, ...base.extra.places].sort((a, b) =>
               a.name.localeCompare(b.name),
             ),

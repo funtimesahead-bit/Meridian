@@ -1,0 +1,182 @@
+.quiz {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 20px var(--gutter) 64px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.quiz > a {
+  margin-bottom: 0;
+  justify-self: start;
+}
+
+.head {
+  display: grid;
+  gap: 10px;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 680;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+/* ---- Before starting ---- */
+
+.ready {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.lede {
+  font-size: 16.5px;
+  color: var(--muted);
+  max-width: 60ch;
+}
+
+.modes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: min(100%, 560px);
+}
+
+.footnote {
+  font-size: 13px;
+  color: var(--faint);
+  max-width: 60ch;
+}
+
+.doneActions {
+  display: flex;
+  gap: 8px;
+}
+
+.last {
+  color: var(--good);
+  font-weight: 600;
+}
+
+/* ---- Map and list ---- */
+
+.board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .withMap {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+}
+
+/* Without a map the list has room for two columns, read top to bottom. */
+@media (min-width: 640px) {
+  .board:not(.withMap) .list {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(10, auto);
+    grid-auto-flow: column;
+    column-gap: 12px;
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 6px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14.5px;
+}
+
+.rank {
+  width: 20px;
+  color: var(--faint);
+  font-size: 12.5px;
+  text-align: right;
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 550;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.blank {
+  display: block;
+  width: 70%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--surface-2);
+}
+
+.pop {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.found {
+  border-color: transparent;
+  background: var(--good-soft);
+}
+
+.found .name {
+  color: var(--good);
+}
+
+.fresh {
+  animation: flash 600ms ease-out;
+}
+
+@keyframes flash {
+  from {
+    box-shadow: 0 0 0 2px var(--good);
+  }
+}
+
+.missed {
+  border-color: transparent;
+  background: var(--bad-soft);
+}
+
+.missed .name {
+  color: var(--bad);
+}
+
+@media (max-width: 560px) {
+  .title {
+    font-size: 22px;
+  }
+
+  .ready {
+    padding: 16px;
+  }
+
+  .modes {
+    grid-template-columns: 1fr;
+  }
+}

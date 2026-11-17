@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CardArt } from "@/components/CardArt";
 import { GameBest } from "@/components/GameBest";
+import { CITY_QUIZZES } from "@/quizzes/cities/data";
 import { COUNTRY_QUIZZES } from "@/quizzes/countries/data";
 
 export const metadata: Metadata = { title: "Quizzes" };
@@ -36,6 +37,10 @@ export default function QuizzesPage() {
             </div>
           </div>
         </Link>
+      </div>
+
+      <h2 className="section-title">Countries</h2>
+      <div className="card-grid">
         {COUNTRY_QUIZZES.map((quiz) => (
           <Link key={quiz.slug} href={`/quizzes/${quiz.slug}`} className="game-card">
             <div className="game-card__art">
@@ -45,13 +50,36 @@ export default function QuizzesPage() {
               <h2 className="game-card__title">{quiz.title}</h2>
               <p className="game-card__blurb">{quiz.blurb}</p>
               <div className="tag-row">
-                <span className="tag">Countries</span>
                 <span className="tag">{quiz.region}</span>
                 <span className="tag">{quiz.countries.length} answers</span>
                 {quiz.extra && <span className="tag">+ territories option</span>}
               </div>
               <div className="game-card__foot">
                 <GameBest scoreKey={`quiz-${quiz.slug}`} showSetup={false} />
+                <span className="play-pill">Start</span>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      <h2 className="section-title">Cities</h2>
+      <div className="card-grid">
+        {CITY_QUIZZES.map((quiz) => (
+          <Link key={quiz.slug} href={`/quizzes/${quiz.slug}`} className="game-card">
+            <div className="game-card__art">
+              <CardArt kind="ranks" />
+            </div>
+            <div className="game-card__body">
+              <h2 className="game-card__title">{quiz.title}</h2>
+              <p className="game-card__blurb">{quiz.blurb}</p>
+              <div className="tag-row">
+                <span className="tag">{quiz.region}</span>
+                <span className="tag">Top {quiz.cities.length}</span>
+                <span className="tag">Map optional</span>
+              </div>
+              <div className="game-card__foot">
+                <GameBest scoreKey={`cities-${quiz.slug}`} />
                 <span className="play-pill">Start</span>
               </div>
             </div>

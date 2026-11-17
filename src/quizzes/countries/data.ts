@@ -21,7 +21,13 @@ export type CountryQuiz = {
   scene: SceneId;
   countries: QuizCountry[];
   /** An optional harder version that adds more places, e.g. territories. */
-  extra?: { label: string; baseLabel: string; places: QuizCountry[] };
+  extra?: {
+    label: string;
+    baseLabel: string;
+    places: QuizCountry[];
+    /** A wider map for the bigger version, when the places reach further. */
+    scene?: SceneId;
+  };
 };
 
 type Options = { shapes?: string[]; aliases?: string[]; marker?: [number, number] };
@@ -261,6 +267,125 @@ const ASIA: QuizCountry[] = [
   c("Yemen"),
 ];
 
+const AFRICA: QuizCountry[] = [
+  c("Algeria"),
+  c("Angola"),
+  c("Benin"),
+  c("Botswana"),
+  c("Burkina Faso"),
+  c("Burundi"),
+  c("Cabo Verde", { aliases: ["Cape Verde"], marker: [-23.6, 15.1] }),
+  c("Cameroon"),
+  c("Central African Republic", { shapes: ["Central African Rep."], aliases: ["CAR"] }),
+  c("Chad"),
+  c("Comoros", { marker: [43.9, -11.9] }),
+  c("DR Congo", {
+    shapes: ["Dem. Rep. Congo"],
+    aliases: [
+      "DRC",
+      "Democratic Republic of the Congo",
+      "Democratic Republic of Congo",
+      "Congo Kinshasa",
+      "Zaire",
+    ],
+  }),
+  c("Republic of the Congo", {
+    shapes: ["Congo"],
+    aliases: ["Congo", "Republic of Congo", "Congo Brazzaville", "Congo-Brazzaville"],
+  }),
+  c("Côte d'Ivoire", { aliases: ["Ivory Coast", "Cote d'Ivoire"] }),
+  c("Djibouti"),
+  c("Egypt"),
+  c("Equatorial Guinea", { shapes: ["Eq. Guinea"] }),
+  c("Eritrea"),
+  c("Eswatini", { shapes: ["eSwatini"], aliases: ["Swaziland"] }),
+  c("Ethiopia"),
+  c("Gabon"),
+  c("Gambia", { aliases: ["The Gambia"] }),
+  c("Ghana"),
+  c("Guinea"),
+  c("Guinea-Bissau", { aliases: ["Guinea Bissau"] }),
+  c("Kenya"),
+  c("Lesotho"),
+  c("Liberia"),
+  c("Libya"),
+  c("Madagascar"),
+  c("Malawi"),
+  c("Mali"),
+  c("Mauritania"),
+  c("Mauritius", { marker: [57.55, -20.25] }),
+  c("Morocco"),
+  c("Mozambique"),
+  c("Namibia"),
+  c("Niger"),
+  c("Nigeria"),
+  c("Rwanda"),
+  c("São Tomé and Príncipe", {
+    shapes: ["São Tomé and Principe"],
+    aliases: ["Sao Tome and Principe", "Sao Tome"],
+    marker: [6.7, 0.3],
+  }),
+  c("Senegal"),
+  c("Seychelles", { marker: [55.5, -4.6] }),
+  c("Sierra Leone"),
+  c("Somalia", { shapes: ["Somalia", "Somaliland"] }),
+  c("South Africa"),
+  c("South Sudan", { shapes: ["S. Sudan"] }),
+  c("Sudan"),
+  c("Tanzania"),
+  c("Togo"),
+  c("Tunisia"),
+  c("Uganda"),
+  c("Zambia"),
+  c("Zimbabwe"),
+];
+
+const SOUTH_AMERICA: QuizCountry[] = [
+  c("Argentina"),
+  c("Bolivia"),
+  c("Brazil"),
+  c("Chile"),
+  c("Colombia"),
+  c("Ecuador"),
+  c("Guyana"),
+  c("Paraguay"),
+  c("Peru"),
+  c("Suriname"),
+  c("Uruguay"),
+  c("Venezuela"),
+];
+
+/** Dependent territories in Oceania. */
+const OCEANIA_TERRITORIES: QuizCountry[] = [
+  c("American Samoa", { marker: [-170.7, -14.3] }),
+  c("Cook Islands", { shapes: ["Cook Is."], aliases: ["Cooks"], marker: [-159.8, -21.2] }),
+  c("French Polynesia", {
+    shapes: ["Fr. Polynesia"],
+    aliases: ["Tahiti"],
+    marker: [-149.4, -17.65],
+  }),
+  c("Guam", { marker: [144.8, 13.45] }),
+  c("New Caledonia"),
+  c("Niue", { marker: [-169.87, -19.05] }),
+  c("Norfolk Island", { aliases: ["Norfolk"], marker: [167.95, -29.03] }),
+  c("Northern Mariana Islands", {
+    shapes: ["N. Mariana Is."],
+    aliases: ["Northern Marianas", "Mariana Islands", "Marianas", "Saipan"],
+    marker: [145.75, 15.2],
+  }),
+  c("Pitcairn Islands", {
+    shapes: ["Pitcairn Is."],
+    aliases: ["Pitcairn"],
+    marker: [-130.1, -25.07],
+  }),
+  c("Tokelau", { shapes: [], marker: [-171.8, -9.2] }),
+  c("Wallis and Futuna", {
+    shapes: ["Wallis and Futuna Is."],
+    aliases: ["Wallis", "Wallis Futuna"],
+    marker: [-176.2, -13.3],
+  }),
+];
+
 const OCEANIA: QuizCountry[] = [
   c("Australia"),
   c("Fiji", { marker: [178, -17.8] }),
@@ -326,6 +451,28 @@ export const COUNTRY_QUIZZES: CountryQuiz[] = [
     region: "Oceania",
     scene: "oceania",
     countries: OCEANIA,
+    extra: {
+      baseLabel: "Countries",
+      label: "Countries + territories",
+      places: OCEANIA_TERRITORIES,
+      scene: "oceania-wide",
+    },
+  },
+  {
+    slug: "countries-of-africa",
+    title: "Countries of Africa",
+    blurb: "Name all 54, island nations included.",
+    region: "Africa",
+    scene: "africa",
+    countries: AFRICA,
+  },
+  {
+    slug: "countries-of-south-america",
+    title: "Countries of South America",
+    blurb: "Name all 12. A good warm-up.",
+    region: "South America",
+    scene: "south-america",
+    countries: SOUTH_AMERICA,
   },
 ];
 

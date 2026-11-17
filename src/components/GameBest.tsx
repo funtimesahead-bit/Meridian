@@ -2,7 +2,13 @@
 
 import { useBests } from "@/lib/scores";
 
-const LABELS: Record<string, string> = { easy: "Easy", medium: "Medium", hard: "Hard" };
+const LABELS: Record<string, string> = {
+  easy: "Easy",
+  medium: "Medium",
+  hard: "Hard",
+  map: "With map",
+  list: "No map",
+};
 
 /** "easy-10" -> "Easy 10". */
 function setupLabel(setup: string): string {

@@ -47,7 +47,15 @@ export const SHAPE_NEIGHBOURS: Map<string, string[]> = (() => {
 
 /* ---------- Scenes: a projection plus the size of its drawing area ---------- */
 
-export type SceneId = "world" | "europe" | "north-america" | "asia" | "oceania";
+export type SceneId =
+  | "world"
+  | "europe"
+  | "north-america"
+  | "south-america"
+  | "africa"
+  | "asia"
+  | "oceania"
+  | "oceania-wide";
 
 export type Scene = {
   id: string;
@@ -168,6 +176,64 @@ function buildProjection(id: SceneId): Built {
         [145.5, 43.5], // east Hokkaido
         [100, 56], // keep a slice of Russia
         [60, 55],
+      ],
+    );
+  }
+  if (id === "africa") {
+    return fitToPoints(
+      geoAzimuthalEqualArea().rotate([-18, -2]).clipAngle(70),
+      1000,
+      1000,
+      450,
+      [
+        [-17.5, 14.7], // Dakar
+        [-25.4, 16.9], // west Cabo Verde
+        [-13, 27.7], // Morocco / Western Sahara coast
+        [10.2, 37.3], // north Tunisia
+        [33, 31.5], // Egypt
+        [51.3, 11.8], // Horn of Africa
+        [57.7, -20.3], // Mauritius
+        [55.5, -4.6], // Seychelles
+        [18.5, -34.8], // Cape of Good Hope
+        [43.3, -11.7], // Comoros
+      ],
+    );
+  }
+  if (id === "south-america") {
+    return fitToPoints(
+      geoAzimuthalEqualArea().rotate([60, 20]).clipAngle(70),
+      1000,
+      1150,
+      450,
+      [
+        [-81.3, -4.5], // west Peru
+        [-72, 12.4], // north Colombia
+        [-51.5, 4.5], // French Guiana coast
+        [-34.8, -7.2], // east Brazil
+        [-68.6, -55.9], // Cape Horn
+        [-75.7, -46], // south Chile
+      ],
+    );
+  }
+  if (id === "oceania-wide") {
+    // Oceania plus the far-flung territories out to Pitcairn.
+    return fitToPoints(
+      geoAzimuthalEqualArea().rotate([-175, 15]).clipAngle(85),
+      1000,
+      700,
+      450,
+      [
+        [113.2, -24], // west Australia
+        [116, -35],
+        [134.5, 8], // Palau
+        [144.8, 13.4], // Guam
+        [145.8, 15.2], // Northern Mariana Islands
+        [171, 10], // Marshall Islands
+        [-130.1, -25.1], // Pitcairn
+        [-140, -9], // Marquesas
+        [-149.4, -17.6], // Tahiti
+        [167.5, -47], // south New Zealand
+        [147, -43.5], // Tasmania
       ],
     );
   }

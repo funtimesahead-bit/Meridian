@@ -38,6 +38,11 @@ export const LazyQuickFire = dynamic(() => import("@/quizzes/quickfire/QuickFire
   loading: Loading,
 });
 
+export const LazyCityRankQuiz = dynamic(() => import("@/quizzes/cities/CityRankQuiz"), {
+  ssr: false,
+  loading: Loading,
+});
+
 export const LazyCountryQuiz = dynamic(
   () => import("@/quizzes/countries/CountryQuiz"),
   { ssr: false, loading: Loading },

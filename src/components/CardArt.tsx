@@ -9,10 +9,10 @@ const DIM_DOTS: [number, number][] = [
 const AMBER = "#f6b73c";
 const DIM = "#3a4c62";
 
-export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "borders" | "route" | "trail" | "quickfire" }) {
+export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "borders" | "route" | "trail" | "quickfire" | "ranks" }) {
   return (
     <svg viewBox="0 0 320 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      {kind !== "borders" && kind !== "route" &&
+      {kind !== "borders" && kind !== "route" && kind !== "ranks" &&
         DIM_DOTS.map(([x, y]) => <circle key={`${x}-${y}`} cx={x} cy={y} r="2.4" fill={DIM} />)}
 
       {kind === "dot" && (
@@ -65,6 +65,33 @@ export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "bo
               <circle cx="176" cy="30" r="3" fill="#8fa1b5" />
             </>
           )}
+        </>
+      )}
+
+      {kind === "ranks" && (
+        <>
+          {[0, 1, 2, 3, 4].map((i) => (
+            <g key={i}>
+              <rect
+                x="92"
+                y={30 + i * 22}
+                width="136"
+                height="16"
+                rx="4"
+                fill={i < 2 ? "rgba(74, 222, 128, 0.18)" : "#18212c"}
+              />
+              <circle cx="104" cy={38 + i * 22} r="3" fill={i < 2 ? "#4ade80" : "#3a4c62"} />
+              <rect
+                x="114"
+                y={35 + i * 22}
+                width={[70, 58, 64, 48, 54][i]}
+                height="6"
+                rx="3"
+                fill={i < 2 ? "#4ade80" : "#32425a"}
+              />
+              <rect x="200" y={35 + i * 22} width="20" height="6" rx="3" fill={AMBER} opacity="0.7" />
+            </g>
+          ))}
         </>
       )}
 

@@ -5,4 +5,4 @@
  * Quick Fire instead, so answer data can build up before launch.
  * Set to true to open it.
  */
-export const EXPEDITION_OPEN = true;
+export const EXPEDITION_OPEN = false;

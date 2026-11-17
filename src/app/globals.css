@@ -168,6 +168,15 @@ button {
   max-width: 56ch;
 }
 
+.section-title {
+  margin: 36px 0 14px;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
 /* ---------- Game cards ---------- */
 
 .card-grid {
