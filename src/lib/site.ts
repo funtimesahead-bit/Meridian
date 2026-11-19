@@ -6,4 +6,5 @@ export const TABS = [
   { href: "/dailies", label: "Dailies" },
   { href: "/games", label: "Games" },
   { href: "/quizzes", label: "Quizzes" },
+  { href: "/learn", label: "Learn" },
 ] as const;

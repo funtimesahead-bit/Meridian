@@ -1,0 +1,444 @@
+.page {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 20px var(--gutter) 64px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+
+.back {
+  justify-self: start;
+  font-size: 14px;
+  font-weight: 550;
+  color: var(--muted);
+}
+
+.back:hover {
+  color: var(--text);
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 680;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.lede {
+  margin-top: 6px;
+  color: var(--muted);
+  max-width: 62ch;
+}
+
+/* ---- Controls ---- */
+
+.controls {
+  position: sticky;
+  top: 60px;
+  z-index: 5;
+  padding: 14px 16px 10px;
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 8px;
+}
+
+.yearRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+
+.year {
+  min-width: 3.2em;
+  text-align: center;
+  font-size: 34px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.iconButton {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.iconButton:hover {
+  border-color: var(--border-strong);
+}
+
+.playButton {
+  height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 650;
+}
+
+.jumps {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+
+.textButton {
+  background: none;
+  border: 0;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.textButton:hover:not(:disabled) {
+  background: var(--accent-soft);
+}
+
+.textButton:disabled {
+  color: var(--faint);
+  cursor: default;
+}
+
+.slider {
+  width: 100%;
+  accent-color: var(--accent);
+  height: 24px;
+  margin: 0;
+}
+
+.scale {
+  position: relative;
+  height: 16px;
+  margin: 0 10px;
+  font-size: 11.5px;
+  color: var(--faint);
+}
+
+.scale span {
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+/* ---- Numbers and details ---- */
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 20px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.stats strong {
+  color: var(--text);
+  font-size: 17px;
+}
+
+.pickedInfo {
+  margin-left: auto;
+  color: var(--muted);
+}
+
+.pickedInfo strong {
+  font-size: 14px;
+}
+
+.note {
+  font-size: 14px;
+  color: var(--muted);
+  padding: 10px 14px;
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+/* ---- Maps ---- */
+
+.main,
+.inset {
+  margin: 0;
+  background: #070a0e;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.insets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.inset figcaption {
+  padding: 6px 10px 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.sea {
+  fill: #0b1118;
+}
+
+.land {
+  fill: #1c2633;
+}
+
+.lake {
+  fill: #0b1118;
+}
+
+.unit {
+  stroke: #0b1016;
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+  cursor: pointer;
+  transition: fill 150ms;
+}
+
+.label {
+  fill: rgba(232, 237, 242, 0.85);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: rgba(7, 10, 14, 0.6);
+  stroke-width: 2.5px;
+}
+
+/* Colours by status. Used on map shapes, dots and legend swatches. */
+.state {
+  --fill: #3d7cc4;
+}
+
+.territory {
+  --fill: #c9963a;
+}
+
+.unorganized {
+  --fill: #8a6d45;
+}
+
+.district {
+  --fill: #e8edf2;
+}
+
+.other {
+  --fill: #7d5aa6;
+}
+
+.commonwealth {
+  --fill: #2fa39a;
+}
+
+.trust {
+  --fill: #9a7fe0;
+}
+
+.occupied {
+  --fill: #c25555;
+}
+
+.leased {
+  --fill: #9aa5b1;
+}
+
+.minor {
+  --fill: #6cc28a;
+}
+
+.unit.state,
+.unit.territory,
+.unit.unorganized,
+.unit.district,
+.unit.other,
+.holding .unit {
+  fill: var(--fill);
+}
+
+.unit.other {
+  fill-opacity: 0.45;
+  stroke: var(--fill);
+  stroke-dasharray: 4 3;
+}
+
+.holding .dot {
+  fill: var(--fill);
+  stroke: #070a0e;
+  stroke-width: 1.5;
+}
+
+.hit {
+  fill: transparent;
+}
+
+.holding {
+  cursor: pointer;
+}
+
+.unit.picked,
+.picked .unit {
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.picked .dot {
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+/* ---- Legend ---- */
+
+.legend {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--fill);
+}
+
+.swatch.other {
+  background: color-mix(in srgb, var(--fill) 45%, transparent);
+  border: 1px dashed var(--fill);
+}
+
+/* ---- Changes this year ---- */
+
+.events {
+  margin-top: 8px;
+  padding: 20px 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.events h2 {
+  font-size: 19px;
+  font-weight: 650;
+  margin-bottom: 12px;
+}
+
+.events h2 :global(.mono) {
+  color: var(--accent);
+}
+
+.events ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 14px;
+}
+
+.events li {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 14px;
+}
+
+.eventDate {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--accent);
+  padding-top: 1px;
+}
+
+.events li strong {
+  font-weight: 650;
+}
+
+.events li p {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.credit {
+  font-size: 12.5px;
+  color: var(--faint);
+}
+
+.credit a {
+  color: var(--muted);
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: 23px;
+  }
+
+  .controls {
+    top: 56px;
+    padding: 10px 12px 8px;
+  }
+
+  .year {
+    font-size: 28px;
+  }
+
+  .jumps {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .pickedInfo {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .events {
+    padding: 16px;
+  }
+
+  .events li {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}

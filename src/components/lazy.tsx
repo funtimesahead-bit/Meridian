@@ -43,6 +43,11 @@ export const LazyCityRankQuiz = dynamic(() => import("@/quizzes/cities/CityRankQ
   loading: Loading,
 });
 
+export const LazyUsHistory = dynamic(() => import("@/learn/us-history/UsHistory"), {
+  ssr: false,
+  loading: Loading,
+});
+
 export const LazyCountryQuiz = dynamic(
   () => import("@/quizzes/countries/CountryQuiz"),
   { ssr: false, loading: Loading },
