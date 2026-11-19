@@ -69,3 +69,9 @@
     align-items: stretch;
   }
 }
+
+.hint {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--muted);
+}

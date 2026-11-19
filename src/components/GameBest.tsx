@@ -7,13 +7,23 @@ const LABELS: Record<string, string> = {
   medium: "Medium",
   hard: "Hard",
   map: "With map",
+  EU: "Europe",
+  AS: "Asia",
+  AF: "Africa",
+  NA: "North America",
+  SA: "South America",
+  OC: "Oceania",
+  "60": "1 min",
+  "120": "2 min",
   list: "No map",
 };
 
 /** "easy-10" -> "Easy 10". */
 function setupLabel(setup: string): string {
-  const [first, ...rest] = setup.split("-");
-  return [LABELS[first] ?? first, ...rest].join(" ");
+  return setup
+    .split("-")
+    .map((part) => LABELS[part] ?? part)
+    .join(" ");
 }
 
 /** One-line summary of the player's best saved score for a game or quiz. */

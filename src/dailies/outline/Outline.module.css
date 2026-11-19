@@ -1,0 +1,247 @@
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px var(--gutter) 64px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+.page > a {
+  justify-self: start;
+  margin-bottom: -6px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 680;
+  letter-spacing: -0.02em;
+}
+
+.title :global(.mono) {
+  color: var(--accent);
+}
+
+.lede {
+  margin-top: 4px;
+  color: var(--muted);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+/* ---- The silhouette ---- */
+
+.stage {
+  display: grid;
+  gap: 8px;
+}
+
+.shape {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background:
+    radial-gradient(70% 70% at 50% 40%, rgba(61, 124, 196, 0.12), transparent 70%),
+    #090d12;
+}
+
+.land {
+  fill: #dfe6ee;
+  transition: fill 400ms;
+}
+
+.won .land,
+.won .island {
+  fill: var(--good);
+}
+
+.lost .land,
+.lost .island {
+  fill: var(--accent);
+}
+
+/* The sea zone: a soft area with an outline. The edge is drawn first and
+   thick, then the fill covers its inner half, leaving one clean outline. */
+.zoneEdge {
+  fill: none;
+  stroke: rgba(122, 170, 220, 0.55);
+  stroke-width: 3;
+}
+
+.zone {
+  fill: #13263a;
+}
+
+.island {
+  fill: #dfe6ee;
+  stroke: #090d12;
+  stroke-width: 1;
+}
+
+.caption {
+  font-size: 12.5px;
+  color: var(--faint);
+  text-align: center;
+}
+
+/* ---- Guesses and result ---- */
+
+.panel {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.guesses {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.guess {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.guessNo {
+  width: 14px;
+  font-size: 12.5px;
+  color: var(--faint);
+}
+
+.guessText {
+  flex: 1;
+}
+
+.wrong {
+  border-style: solid;
+  border-color: transparent;
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+
+.right {
+  border-style: solid;
+  border-color: transparent;
+  background: var(--good-soft);
+  color: var(--good);
+}
+
+.form {
+  display: grid;
+  gap: 8px;
+}
+
+.status {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.result {
+  display: grid;
+  gap: 8px;
+  animation: rise 220ms ease-out;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.verdict {
+  font-size: 18px;
+}
+
+.answer {
+  color: var(--accent);
+  font-size: 22px;
+}
+
+.points {
+  color: var(--muted);
+}
+
+.points :global(.mono) {
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 650;
+}
+
+.squares {
+  font-size: 22px;
+  letter-spacing: 2px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.next {
+  font-size: 13.5px;
+  color: var(--faint);
+}
+
+.stats {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.stats dt {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.stats dd {
+  margin: 2px 0 0;
+  font-size: 20px;
+  font-weight: 650;
+}
+
+.locator {
+  animation: rise 300ms ease-out;
+}
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .shape {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .title {
+    font-size: 23px;
+  }
+}

@@ -192,9 +192,9 @@ CITY_QUIZZES.push(
   {
     slug: "biggest-cities-oceania",
     title: "Biggest Cities of Oceania",
-    blurb: "The 15 most populous urban areas in Australia, New Zealand and the Pacific.",
+    blurb: "The 15 most populous urban areas in Australia, New Zealand and the Pacific, Hawaii included.",
     region: "Oceania",
-    scene: "oceania",
+    scene: "oceania-cities",
     cities: parse(`
       Sydney = 5.5 @ -33.87, 151.21
       Melbourne = 5.3 @ -37.81, 144.96
@@ -202,6 +202,7 @@ CITY_QUIZZES.push(
       Perth = 2.3 @ -31.95, 115.86
       Auckland = 1.7 @ -36.85, 174.76
       Adelaide = 1.4 @ -34.93, 138.60
+      Honolulu = 1.0 @ 21.31, -157.86
       Gold Coast = 0.73 @ -28.02, 153.40
       Newcastle = 0.52 @ -32.93, 151.78
       Canberra = 0.48 @ -35.28, 149.13
@@ -210,7 +211,6 @@ CITY_QUIZZES.push(
       Christchurch = 0.40 @ -43.53, 172.64
       Sunshine Coast = 0.38 @ -26.65, 153.07
       Wollongong = 0.31 @ -34.42, 150.89
-      Geelong = 0.30 @ -38.15, 144.36
     `),
   },
 );

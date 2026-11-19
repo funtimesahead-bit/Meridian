@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ExpeditionCard } from "@/components/ExpeditionCard";
+import { OutlineCard } from "@/components/OutlineCard";
 
 export const metadata: Metadata = { title: "Dailies" };
 
@@ -13,6 +14,7 @@ export default function DailiesPage() {
       </div>
 
       <div className="card-grid">
+        <OutlineCard />
         <ExpeditionCard />
         <div className="soon-card">
           <strong>More dailies on the way</strong>

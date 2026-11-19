@@ -3,6 +3,7 @@ import { CardArt } from "@/components/CardArt";
 import { ContinentArt } from "@/components/ContinentArt";
 import { ExpeditionCard } from "@/components/ExpeditionCard";
 import { LazyHeroGlobe } from "@/components/lazy";
+import { OutlineCard } from "@/components/OutlineCard";
 import { YourProgress } from "@/components/home/YourProgress";
 import { BROAD_PROMPTS } from "@/dailies/expedition/broad";
 import { EXPEDITION_OPEN } from "@/dailies/expedition/config";
@@ -93,6 +94,7 @@ export default function Home() {
           </div>
         </header>
         <div className={styles.todayGrid}>
+          <OutlineCard titleTag="h3" />
           <ExpeditionCard />
           <Link href="/quizzes/quick-fire" className="game-card">
             <div className="game-card__art">
@@ -105,21 +107,6 @@ export default function Home() {
               </p>
               <div className="game-card__foot">
                 <span className="card-best">15 seconds a question</span>
-                <span className="play-pill">Play</span>
-              </div>
-            </div>
-          </Link>
-          <Link href="/games/name-the-city" className="game-card">
-            <div className="game-card__art">
-              <CardArt kind="dot" />
-            </div>
-            <div className="game-card__body">
-              <h3 className="game-card__title">Name the City</h3>
-              <p className="game-card__blurb">
-                The classic: a dot lights up on a blank map. What city is it?
-              </p>
-              <div className="game-card__foot">
-                <span className="card-best">Three difficulties</span>
                 <span className="play-pill">Play</span>
               </div>
             </div>
@@ -150,6 +137,10 @@ export default function Home() {
               </div>
             </Link>
           ))}
+          <Link href="/games" className={`${styles.gameTile} ${styles.allTile}`}>
+            <span>All games</span>
+            <span aria-hidden="true">→</span>
+          </Link>
         </div>
       </section>
 

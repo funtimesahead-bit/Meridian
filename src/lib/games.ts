@@ -5,7 +5,7 @@ export type GameInfo = {
   blurb: string;
   tags: string[];
   /** Which picture the card shows. */
-  art: "dot" | "pin" | "rings" | "ring" | "route";
+  art: "dot" | "pin" | "capital" | "rings" | "ring" | "route" | "sprint";
   /** Where the game's best scores are saved (see src/lib/scores.ts). */
   scoreKey?: string;
 };
@@ -21,12 +21,21 @@ export const GAMES: GameInfo[] = [
   },
   {
     slug: "pin-drop",
-    title: "Pin Drop",
+    title: "Pin Drop: Countries",
     blurb:
       "You get a country and a borderless map. Drop a pin on it: inside is full marks, and near misses still score.",
     tags: ["Countries", "World", "Clicking"],
     art: "pin",
     scoreKey: "pin-drop",
+  },
+  {
+    slug: "pin-drop-capitals",
+    title: "Pin Drop: Capitals",
+    blurb:
+      "A capital is named; find it on a blank, borderless map. Within 50 km is full marks, and near misses still score.",
+    tags: ["Capitals", "World", "Clicking"],
+    art: "capital",
+    scoreKey: "pin-drop-capitals",
   },
   {
     slug: "ring-of-five",
@@ -54,5 +63,14 @@ export const GAMES: GameInfo[] = [
     tags: ["Countries", "Borders", "Typing"],
     art: "route",
     scoreKey: "border-run",
+  },
+  {
+    slug: "city-sprint",
+    title: "City Sprint",
+    blurb:
+      "Pick a continent and race the clock: name as many of its cities as you can in one or two minutes.",
+    tags: ["Cities", "Continents", "Timed"],
+    art: "sprint",
+    scoreKey: "city-sprint",
   },
 ];

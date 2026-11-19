@@ -55,6 +55,16 @@ export const LazyUsHistory = dynamic(() => import("@/learn/us-history/UsHistory"
   loading: Loading,
 });
 
+export const LazyOutline = dynamic(() => import("@/dailies/outline/Outline"), {
+  ssr: false,
+  loading: Loading,
+});
+
+export const LazyCitySprint = dynamic(() => import("@/games/city-sprint/CitySprint"), {
+  ssr: false,
+  loading: Loading,
+});
+
 export const LazyCountryQuiz = dynamic(
   () => import("@/quizzes/countries/CountryQuiz"),
   { ssr: false, loading: Loading },

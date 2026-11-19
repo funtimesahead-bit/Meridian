@@ -9,10 +9,10 @@ const DIM_DOTS: [number, number][] = [
 const AMBER = "#f6b73c";
 const DIM = "#3a4c62";
 
-export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "borders" | "route" | "trail" | "quickfire" | "ranks" | "history" }) {
+export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "borders" | "route" | "trail" | "quickfire" | "ranks" | "history" | "outline" | "capital" | "sprint" }) {
   return (
     <svg viewBox="0 0 320 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      {kind !== "borders" && kind !== "route" && kind !== "ranks" && kind !== "history" &&
+      {kind !== "borders" && kind !== "route" && kind !== "ranks" && kind !== "history" && kind !== "outline" &&
         DIM_DOTS.map(([x, y]) => <circle key={`${x}-${y}`} cx={x} cy={y} r="2.4" fill={DIM} />)}
 
       {kind === "dot" && (
@@ -65,6 +65,47 @@ export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "bo
               <circle cx="176" cy="30" r="3" fill="#8fa1b5" />
             </>
           )}
+        </>
+      )}
+
+      {kind === "capital" && (
+        <>
+          <path
+            d="M96 122 C120 96 150 132 186 104 S250 92 262 118 S150 160 96 122 Z"
+            fill="#2b3b4e"
+          />
+          <path
+            d="M176 100 L180.7 109.6 L191.2 111.1 L183.6 118.5 L185.4 129 L176 124 L166.6 129 L168.4 118.5 L160.8 111.1 L171.3 109.6 Z"
+            fill="#e8edf2"
+          />
+          <path
+            d="M176 96 C172 82 158 74 158 58 A18 18 0 1 1 194 58 C194 74 180 82 176 96 Z"
+            fill={AMBER}
+          />
+          <circle cx="176" cy="58" r="6.5" fill="#111820" />
+        </>
+      )}
+
+      {kind === "sprint" && (
+        <>
+          <circle cx="160" cy="82" r="46" fill="none" stroke="#32425a" strokeWidth="6" />
+          <path d="M160 36 A46 46 0 1 1 116 96" fill="none" stroke={AMBER} strokeWidth="6" strokeLinecap="round" />
+          <rect x="154" y="24" width="12" height="8" rx="2" fill="#32425a" />
+          <line x1="160" y1="82" x2="160" y2="56" stroke="#e8edf2" strokeWidth="4" strokeLinecap="round" />
+          {[[64, 50], [250, 60], [70, 118], [244, 118], [96, 84], [226, 92]].map(([x, y]) => (
+            <circle key={`${x}-${y}`} cx={x} cy={y} r="4" fill="#4ade80" />
+          ))}
+        </>
+      )}
+
+      {kind === "outline" && (
+        <>
+          <circle cx="160" cy="80" r="62" fill="rgba(61, 124, 196, 0.10)" />
+          <path
+            d="M118 52 L142 40 L168 46 L186 38 L204 52 L198 70 L214 88 L200 108 L176 112 L170 128 L148 122 L136 104 L116 98 L122 78 Z"
+            fill="#dfe6ee"
+          />
+          <text x="160" y="86" textAnchor="middle" fontSize="30" fontWeight="700" fill="#0b1016">?</text>
         </>
       )}
 

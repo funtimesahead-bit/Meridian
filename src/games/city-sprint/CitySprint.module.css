@@ -1,0 +1,63 @@
+.timer {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.timerFill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 100ms linear;
+}
+
+.timerLow {
+  background: var(--bad);
+}
+
+.last {
+  color: var(--good);
+  font-weight: 600;
+}
+
+.namedWrap {
+  max-width: 680px;
+  margin: -40px auto 64px;
+  padding: 0 var(--gutter);
+}
+
+.namedWrap h2 {
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 10px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--good-soft);
+  color: var(--good);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.missed {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.pop {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 12.5px;
+}

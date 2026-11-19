@@ -247,9 +247,24 @@
 @media (min-width: 1040px) {
   .gameStrip {
     grid-auto-flow: row;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     overflow: visible;
   }
+}
+
+/* The last tile in the strip: a link to every game. */
+.allTile {
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-direction: row;
+  min-height: 120px;
+  border-style: dashed;
+  border-color: var(--border-strong);
+  background: transparent;
+  font-size: 16px;
+  font-weight: 650;
+  color: var(--accent);
 }
 
 .gameTile {

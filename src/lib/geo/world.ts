@@ -55,7 +55,8 @@ export type SceneId =
   | "africa"
   | "asia"
   | "oceania"
-  | "oceania-wide";
+  | "oceania-wide"
+  | "oceania-cities";
 
 export type Scene = {
   id: string;
@@ -212,6 +213,24 @@ function buildProjection(id: SceneId): Built {
         [-34.8, -7.2], // east Brazil
         [-68.6, -55.9], // Cape Horn
         [-75.7, -46], // south Chile
+      ],
+    );
+  }
+  if (id === "oceania-cities") {
+    // Australia and New Zealand out to Hawaii, for the biggest-cities quiz.
+    return fitToPoints(
+      geoAzimuthalEqualArea().rotate([-175, 8]).clipAngle(85),
+      1000,
+      720,
+      450,
+      [
+        [113.2, -24], // west Australia
+        [116, -35],
+        [147, -43.5], // Tasmania
+        [168, -47], // south New Zealand
+        [-160.5, 22.4], // Hawaii
+        [-154.8, 18.9],
+        [141, -2.5], // north Papua New Guinea
       ],
     );
   }
