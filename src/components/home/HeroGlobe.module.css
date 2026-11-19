@@ -1,0 +1,73 @@
+.globe {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.globe:active {
+  cursor: grabbing;
+}
+
+.graticule {
+  fill: none;
+  stroke: rgba(139, 152, 168, 0.12);
+  stroke-width: 0.7;
+}
+
+.land {
+  fill: #2b3b4e;
+  stroke: #3a4c62;
+  stroke-width: 0.6;
+}
+
+.rim {
+  fill: none;
+  stroke: rgba(232, 237, 242, 0.12);
+  stroke-width: 1;
+}
+
+.route {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 4 7;
+  opacity: 0.75;
+  animation: march 1.6s linear infinite;
+}
+
+@keyframes march {
+  to {
+    stroke-dashoffset: -22;
+  }
+}
+
+.city {
+  fill: var(--accent);
+  stroke: #0b1016;
+  stroke-width: 1.4;
+}
+
+.pulse {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.4;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse 2.8s ease-out infinite;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(4.2);
+    opacity: 0;
+  }
+}

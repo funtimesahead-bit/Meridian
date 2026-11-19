@@ -25,7 +25,7 @@ function allowedTypos(length: number): number {
 }
 
 function formatMillions(m: number): string {
-  return `${m.toFixed(1)}M`;
+  return m < 1 ? `${Math.round(m * 1000)}k` : `${m.toFixed(1)}M`;
 }
 
 export default function CityRankQuiz({ slug }: { slug: string }) {
@@ -321,7 +321,10 @@ export default function CityRankQuiz({ slug }: { slug: string }) {
                 />
               </div>
             )}
-            <ol className={styles.list}>
+            <ol
+              className={styles.list}
+              style={{ "--rows": Math.ceil(total / 2) } as React.CSSProperties}
+            >
               {quiz.cities.map((city) => {
                 const isFound = found.has(city.rank);
                 return (

@@ -1,0 +1,516 @@
+.home {
+  overflow-x: clip;
+}
+
+/* ---------------- Hero ---------------- */
+
+.hero {
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+
+.heroGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 70% at 78% 45%, rgba(61, 124, 196, 0.13), transparent 70%),
+    radial-gradient(45% 60% at 12% 10%, rgba(246, 183, 60, 0.08), transparent 70%);
+}
+
+/* Faint meridian lines behind everything. */
+.heroGlow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(139, 152, 168, 0.045) 0 1px,
+    transparent 1px 96px
+  );
+  mask-image: linear-gradient(to bottom, black, transparent 90%);
+}
+
+.heroInner {
+  position: relative;
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 56px var(--gutter) 64px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 32px;
+}
+
+.heroText {
+  display: grid;
+  gap: 22px;
+  justify-items: start;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 13px 5px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  font-size: 13px;
+  font-weight: 550;
+  color: var(--muted);
+}
+
+.eyebrowDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.headline {
+  font-size: clamp(40px, 6.2vw, 68px);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.lede {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 48ch;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 50px;
+  padding: 0 22px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 650;
+  transition:
+    transform 140ms,
+    filter 140ms,
+    border-color 140ms,
+    background 140ms;
+}
+
+.primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 8px 28px -10px rgba(246, 183, 60, 0.6);
+}
+
+.primary:hover {
+  filter: brightness(1.07);
+  transform: translateY(-1px);
+}
+
+.secondary {
+  border: 1px solid var(--border-strong);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  color: var(--text);
+}
+
+.secondary:hover {
+  border-color: var(--muted);
+  transform: translateY(-1px);
+}
+
+.facts {
+  margin: 6px 0 0;
+  display: flex;
+  gap: 34px;
+}
+
+.facts div {
+  display: grid;
+  gap: 2px;
+}
+
+.facts dt {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.facts dd {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 650;
+}
+
+.globeWrap {
+  width: min(100%, 520px);
+  justify-self: center;
+  aspect-ratio: 1;
+}
+
+/* Shown while the globe code loads, the same size and shape as the globe. */
+.globePlaceholder {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, #172230, #0d141c 70%, #090e14);
+  transform: scale(0.91);
+}
+
+/* ---------------- Sections ---------------- */
+
+.section {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 52px var(--gutter) 0;
+}
+
+.section:last-child {
+  padding-bottom: 72px;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.sectionHead h2 {
+  font-size: 28px;
+  font-weight: 680;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.kicker {
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.more {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.more:hover {
+  color: var(--text);
+}
+
+.todayGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+/* ---- Game strip: compact cards in a row ---- */
+
+/* All games in one row on wide screens; a swipeable strip on narrower ones. */
+.gameStrip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 220px;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
+  margin-bottom: -8px;
+  scrollbar-width: thin;
+}
+
+.gameStrip > * {
+  scroll-snap-align: start;
+}
+
+@media (min-width: 1040px) {
+  .gameStrip {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    overflow: visible;
+  }
+}
+
+.gameTile {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+  transition:
+    border-color 140ms,
+    transform 140ms;
+}
+
+.gameTile:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.gameTileArt {
+  position: relative;
+  aspect-ratio: 16 / 7;
+  background: radial-gradient(120% 90% at 30% 20%, #1a2634 0%, var(--ocean) 70%);
+  border-bottom: 1px solid var(--border);
+}
+
+.gameTileArt svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.gameTileText {
+  padding: 13px 15px 15px;
+}
+
+.gameTileText h3 {
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.gameTileText p {
+  margin-top: 4px;
+  font-size: 13.5px;
+  color: var(--muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---- Continents ---- */
+
+.continents {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.continent {
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.continentArt {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  margin: -18px -18px 14px;
+  border-bottom: 1px solid var(--border);
+  background: radial-gradient(120% 90% at 30% 20%, #1a2634 0%, var(--ocean) 70%);
+  overflow: hidden;
+}
+
+.continentArt svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.continent {
+  overflow: hidden;
+}
+
+.continent h3 {
+  font-size: 18px;
+  font-weight: 650;
+  margin-bottom: 12px;
+}
+
+.continentLinks {
+  display: grid;
+  gap: 6px;
+}
+
+.continentLinks a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-size: 14.5px;
+  font-weight: 550;
+  transition:
+    border-color 120ms,
+    background 120ms;
+}
+
+.continentLinks a:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.continentLinks a :global(.mono) {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ---- Learn banner ---- */
+
+.learn {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  padding: 34px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background:
+    radial-gradient(80% 120% at 100% 0%, rgba(61, 124, 196, 0.16), transparent 60%),
+    var(--surface);
+  transition: border-color 140ms;
+}
+
+.learn:hover {
+  border-color: var(--border-strong);
+}
+
+.learnText {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+.learnText h2 {
+  font-size: 30px;
+  font-weight: 680;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+}
+
+.learnText p:not(.kicker) {
+  color: var(--muted);
+  max-width: 50ch;
+}
+
+.learnText .kicker {
+  margin-bottom: 0;
+}
+
+.learnText .primary {
+  margin-top: 6px;
+}
+
+.learnArt {
+  aspect-ratio: 2 / 1;
+  border-radius: var(--radius);
+  background: radial-gradient(120% 90% at 30% 20%, #1a2634 0%, var(--ocean) 70%);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.learnArt svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ---- Progress line ---- */
+
+.progress {
+  padding: 18px 22px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.progress strong {
+  color: var(--text);
+}
+
+.progress a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.progress a:hover {
+  text-decoration: underline;
+}
+
+/* ---------------- Small screens ---------------- */
+
+@media (max-width: 900px) {
+  .heroInner {
+    grid-template-columns: 1fr;
+    padding-top: 36px;
+    gap: 8px;
+  }
+
+  .globeWrap {
+    order: -1;
+    width: min(72%, 360px);
+  }
+
+  .todayGrid,
+  .continents {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .learn {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .lede {
+    font-size: 16.5px;
+  }
+
+  .facts {
+    gap: 22px;
+  }
+
+  .facts dd {
+    font-size: 22px;
+  }
+
+  .todayGrid,
+  .continents {
+    grid-template-columns: 1fr;
+  }
+
+  .section {
+    padding-top: 40px;
+  }
+
+  .sectionHead h2 {
+    font-size: 23px;
+  }
+
+  .learn {
+    padding: 22px;
+  }
+
+  .learnText h2 {
+    font-size: 24px;
+  }
+}

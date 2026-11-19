@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 import "./globals.css";
@@ -10,6 +11,11 @@ const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" });
 export const metadata: Metadata = {
   title: { default: SITE_NAME, template: `%s · ${SITE_NAME}` },
   description: SITE_TAGLINE,
+  openGraph: {
+    title: SITE_NAME,
+    description: SITE_TAGLINE,
+    type: "website",
+  },
 };
 
 export const viewport: Viewport = {
@@ -26,7 +32,8 @@ export default function RootLayout({
     <html lang="en" className={`${sans.variable} ${mono.variable}`}>
       <body>
         <Header />
-        {children}
+        <div className="site-main">{children}</div>
+        <Footer />
       </body>
     </html>
   );

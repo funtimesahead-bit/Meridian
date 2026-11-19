@@ -1,17 +1,24 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import homeStyles from "@/app/home.module.css";
 
 /* Map-based games carry a large country outline file, so they are loaded in
    the browser only when their page is opened. */
 
 function Loading() {
   return (
-    <div className="page" style={{ color: "var(--faint)" }}>
+    <div className="page loading" role="status">
+      <span className="loading__spinner" aria-hidden="true" />
       Loading…
     </div>
   );
 }
+
+export const LazyHeroGlobe = dynamic(() => import("@/components/home/HeroGlobe"), {
+  ssr: false,
+  loading: () => <div className={homeStyles.globePlaceholder} />,
+});
 
 export const LazyPinDrop = dynamic(() => import("@/games/pin-drop/PinDrop"), {
   ssr: false,

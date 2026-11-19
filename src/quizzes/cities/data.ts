@@ -130,6 +130,91 @@ export const CITY_QUIZZES: CityQuiz[] = [
   },
 ];
 
+CITY_QUIZZES.push(
+  {
+    slug: "biggest-cities-south-america",
+    title: "Biggest Cities of South America",
+    blurb: "The 20 most populous metro areas from Bogotá to Buenos Aires.",
+    region: "South America",
+    scene: "south-america",
+    cities: parse(`
+      São Paulo | Sao Paulo = 22.8 @ -23.55, -46.63
+      Buenos Aires = 15.8 @ -34.60, -58.38
+      Rio de Janeiro | Rio = 13.8 @ -22.91, -43.17
+      Bogotá | Bogota = 11.7 @ 4.71, -74.07
+      Lima = 11.4 @ -12.05, -77.04
+      Santiago | Santiago de Chile = 6.9 @ -33.45, -70.67
+      Belo Horizonte = 6.3 @ -19.92, -43.94
+      Brasília | Brasilia = 4.8 @ -15.79, -47.88
+      Recife = 4.3 @ -8.05, -34.88
+      Porto Alegre = 4.2 @ -30.03, -51.23
+      Fortaleza = 4.2 @ -3.73, -38.53
+      Medellín | Medellin = 4.1 @ 6.24, -75.58
+      Salvador | Salvador da Bahia = 3.9 @ -12.97, -38.50
+      Curitiba = 3.8 @ -25.43, -49.27
+      Asunción | Asuncion = 3.6 @ -25.26, -57.58
+      Campinas = 3.4 @ -22.91, -47.06
+      Guayaquil = 3.1 @ -2.19, -79.89
+      Caracas = 3.0 @ 10.48, -66.90
+      Cali | Santiago de Cali = 2.9 @ 3.45, -76.53
+      Goiânia | Goiania = 2.8 @ -16.69, -49.26
+    `),
+  },
+  {
+    slug: "biggest-cities-africa",
+    title: "Biggest Cities of Africa",
+    blurb: "The 20 most populous metro areas, from Cairo to Cape Town.",
+    region: "Africa",
+    scene: "africa",
+    cities: parse(`
+      Cairo = 23.1 @ 30.04, 31.24
+      Kinshasa = 17.0 @ -4.44, 15.27
+      Lagos = 16.5 @ 6.52, 3.38
+      Luanda = 9.7 @ -8.84, 13.23
+      Dar es Salaam = 8.6 @ -6.79, 39.21
+      Khartoum = 6.8 @ 15.50, 32.56
+      Johannesburg | Joburg | Jo'burg = 6.4 @ -26.20, 28.05
+      Abidjan = 5.9 @ 5.36, -4.01
+      Alexandria = 5.7 @ 31.20, 29.92
+      Addis Ababa | Addis = 5.7 @ 9.03, 38.74
+      Nairobi = 5.5 @ -1.29, 36.82
+      Cape Town = 5.1 @ -33.92, 18.42
+      Kano = 4.6 @ 12.00, 8.52
+      Yaoundé | Yaounde = 4.5 @ 3.85, 11.50
+      Douala = 4.2 @ 4.05, 9.70
+      Casablanca = 4.0 @ 33.57, -7.59
+      Ibadan = 4.0 @ 7.38, 3.95
+      Kampala = 4.0 @ 0.35, 32.58
+      Abuja = 4.0 @ 9.06, 7.49
+      Antananarivo | Tana = 4.0 @ -18.88, 47.51
+    `),
+  },
+  {
+    slug: "biggest-cities-oceania",
+    title: "Biggest Cities of Oceania",
+    blurb: "The 15 most populous urban areas in Australia, New Zealand and the Pacific.",
+    region: "Oceania",
+    scene: "oceania",
+    cities: parse(`
+      Sydney = 5.5 @ -33.87, 151.21
+      Melbourne = 5.3 @ -37.81, 144.96
+      Brisbane = 2.7 @ -27.47, 153.03
+      Perth = 2.3 @ -31.95, 115.86
+      Auckland = 1.7 @ -36.85, 174.76
+      Adelaide = 1.4 @ -34.93, 138.60
+      Gold Coast = 0.73 @ -28.02, 153.40
+      Newcastle = 0.52 @ -32.93, 151.78
+      Canberra = 0.48 @ -35.28, 149.13
+      Wellington = 0.44 @ -41.29, 174.78
+      Port Moresby = 0.42 @ -9.44, 147.18
+      Christchurch = 0.40 @ -43.53, 172.64
+      Sunshine Coast = 0.38 @ -26.65, 153.07
+      Wollongong = 0.31 @ -34.42, 150.89
+      Geelong = 0.30 @ -38.15, 144.36
+    `),
+  },
+);
+
 export function findCityQuiz(slug: string): CityQuiz | undefined {
   return CITY_QUIZZES.find((quiz) => quiz.slug === slug);
 }

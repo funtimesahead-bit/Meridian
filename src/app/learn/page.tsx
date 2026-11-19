@@ -8,6 +8,7 @@ export default function LearnPage() {
   return (
     <main className="page">
       <div className="page-head">
+        <p className="page-head__eyebrow">Explore</p>
         <h1>Learn</h1>
         <p>Interactive maps, flashcards and explainers. No scores, just exploring.</p>
       </div>
@@ -34,6 +35,10 @@ export default function LearnPage() {
             </div>
           </div>
         </Link>
+        <div className="soon-card">
+          <strong>Flashcards and more maps</strong>
+          <span>Coming soon.</span>
+        </div>
       </div>
     </main>
   );

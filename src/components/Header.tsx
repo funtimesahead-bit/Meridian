@@ -10,7 +10,7 @@ export function Header() {
   return (
     <header className="site-header">
       <div className="site-header__inner">
-        <Link href="/games" className="brand" aria-label={`${SITE_NAME} home`}>
+        <Link href="/" className="brand" aria-label={`${SITE_NAME} home`}>
           <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
             <circle cx="13" cy="13" r="11" fill="none" stroke="#32425a" strokeWidth="1.5" />
             <ellipse cx="13" cy="13" rx="4.6" ry="11" fill="none" stroke="#32425a" strokeWidth="1.5" />

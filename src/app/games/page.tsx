@@ -11,8 +11,12 @@ export default function GamesPage() {
   return (
     <main className="page">
       <div className="page-head">
+        <p className="page-head__eyebrow">{GAMES.length} games</p>
         <h1>Games</h1>
-        <p>Replayable geography games. Pick a difficulty and beat your own best.</p>
+        <p>
+          Replayable geography games on blank maps. Pick a difficulty, play as often as you
+          like, and beat your own best.
+        </p>
       </div>
 
       <div className="card-grid">
