@@ -15,7 +15,8 @@ import styles from "./MapCanvas.module.css";
 /* A pannable, zoomable blank map. Games describe what to draw on it
    (countries, outlines, markers) and it handles the rest. */
 
-const MAX_ZOOM = 90;
+/** Furthest anyone can zoom in. Enough to separate nearby pins and dots. */
+const MAX_ZOOM = 24;
 
 type View = { k: number; x: number; y: number };
 
@@ -199,7 +200,7 @@ export default function MapCanvas({
       const k = Math.min(
         W / (Math.max(1, x1 - x0) * pad),
         h / (Math.max(1, y1 - y0) * pad),
-        target?.maxZoom ?? (target?.geo ? 12 : MAX_ZOOM),
+        Math.min(MAX_ZOOM, target?.maxZoom ?? (target?.geo ? 12 : MAX_ZOOM)),
       );
       return {
         k,
@@ -234,11 +235,17 @@ export default function MapCanvas({
 
   /* ---- Drag to pan, pinch or scroll to zoom, click to pick ---- */
 
-  const zoomAt = useCallback((v: View, factor: number, px: number, py: number): View => {
-    const k = Math.max(0.01, v.k * factor);
-    const ratio = k / v.k;
-    return { k, x: px - (px - v.x) * ratio, y: py - (py - v.y) * ratio };
-  }, []);
+  // Clamp the zoom before working out the new position. Clamping afterwards
+  // kept offsets meant for a deeper zoom, which flung the view across the map.
+  const zoomAt = useCallback(
+    (v: View, factor: number, px: number, py: number): View => {
+      const minZoom = Math.min(1, viewHRef.current / H);
+      const k = clamp(v.k * factor, minZoom, MAX_ZOOM);
+      const ratio = k / v.k;
+      return { k, x: px - (px - v.x) * ratio, y: py - (py - v.y) * ratio };
+    },
+    [H],
+  );
 
   const pointers = useRef(new Map<number, { x: number; y: number }>());
   const press = useRef<{ id: number; x: number; y: number; moved: boolean } | null>(null);

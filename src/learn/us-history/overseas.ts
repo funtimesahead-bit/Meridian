@@ -12,7 +12,13 @@ export type OverseasStatus =
   | "leased"
   | "minor";
 
-export type InsetId = "caribbean" | "central-pacific" | "western-pacific";
+export type InsetId =
+  | "caribbean"
+  | "central-pacific"
+  | "western-pacific"
+  | "mexico"
+  | "europe"
+  | "east-asia";
 
 export type Period = {
   from: number;
@@ -32,13 +38,15 @@ export type Holding = {
   periods: Period[];
   /** What happened when the last period ended, if it has. */
   endNote?: string;
+  /** A military occupation of another country: never US territory. */
+  occupation?: boolean;
 };
 
 export const STATUS_LABELS: Record<OverseasStatus, string> = {
   territory: "Territory",
   commonwealth: "Commonwealth",
   trust: "UN trust territory",
-  occupied: "Military government",
+  occupied: "Military government or occupation",
   leased: "Leased",
   minor: "Minor island",
 };
@@ -47,7 +55,12 @@ export const INSETS: Record<InsetId, { label: string; bounds: [[number, number],
   caribbean: { label: "Caribbean and Panama", bounds: [[-86.5, 7], [-63.5, 24.5]] },
   "central-pacific": { label: "Pacific islands", bounds: [[-180, -16], [-158.5, 29.5]] },
   "western-pacific": { label: "Western Pacific", bounds: [[115.5, 2.5], [172.5, 30.5]] },
+  mexico: { label: "Mexico", bounds: [[-101, 17.5], [-94.5, 21.5]] },
+  europe: { label: "Europe and the Middle East", bounds: [[3, 28], [50, 56]] },
+  "east-asia": { label: "East Asia", bounds: [[123, 30.5], [146.5, 45.8]] },
 };
+
+const NOT_TERRITORY = "This was a military occupation, not US territory.";
 
 export const HOLDINGS: Holding[] = [
   /* ---------------- Caribbean and Panama ---------------- */
@@ -81,18 +94,19 @@ export const HOLDINGS: Holding[] = [
     inset: "caribbean",
     shapes: ["Cuba"],
     point: [-79.5, 21.8],
+    occupation: true,
     periods: [
       {
         from: 18990101,
         to: 19020519,
         status: "occupied",
-        note: "Spain gave up Cuba, which came under US military government.",
+        note: "Spain gave up Cuba, which came under US military government until a Cuban republic was set up. This was a military occupation, not US territory.",
       },
       {
         from: 19060929,
         to: 19090127,
         status: "occupied",
-        note: "The United States occupied Cuba again after an uprising, under a provisional governor.",
+        note: "The United States occupied Cuba again after an uprising, under a provisional governor. This was a military occupation, not US territory.",
       },
     ],
     endNote: "US military government in Cuba ended.",
@@ -406,6 +420,205 @@ export const HOLDINGS: Holding[] = [
       },
     ],
     endNote: "The United States returned the Bonin and Volcano Islands, including Iwo Jima, to Japan.",
+  },
+];
+
+/* ---------------- Military occupations ---------------- */
+
+export const OCCUPATIONS: Holding[] = [
+  {
+    id: "mexico-city",
+    name: "Mexico City",
+    inset: "mexico",
+    point: [-99.13, 19.43],
+    occupation: true,
+    periods: [
+      {
+        from: 18470914,
+        to: 18480612,
+        status: "occupied",
+        note: `US troops captured Mexico City in the Mexican–American War and held it until the peace treaty. ${NOT_TERRITORY}`,
+      },
+    ],
+    endNote: "The last US troops left Mexico City after the Treaty of Guadalupe Hidalgo.",
+  },
+  {
+    id: "veracruz",
+    name: "Veracruz",
+    inset: "mexico",
+    point: [-96.13, 19.2],
+    occupation: true,
+    periods: [
+      {
+        from: 18470329,
+        to: 18480731,
+        status: "occupied",
+        note: `US forces took the port of Veracruz during the Mexican–American War. ${NOT_TERRITORY}`,
+      },
+      {
+        from: 19140421,
+        to: 19141123,
+        status: "occupied",
+        note: `US Marines and sailors occupied Veracruz during the Mexican Revolution. ${NOT_TERRITORY}`,
+      },
+    ],
+    endNote: "US forces withdrew from Veracruz.",
+  },
+  {
+    id: "haiti",
+    name: "Haiti",
+    inset: "caribbean",
+    shapes: ["Haiti"],
+    point: [-72.6, 19],
+    occupation: true,
+    periods: [
+      {
+        from: 19150728,
+        to: 19340801,
+        status: "occupied",
+        note: `US Marines landed in Haiti and began an occupation that lasted almost twenty years. ${NOT_TERRITORY}`,
+      },
+    ],
+    endNote: "The US occupation of Haiti ended and the last Marines left.",
+  },
+  {
+    id: "dominican-republic",
+    name: "Dominican Republic",
+    inset: "caribbean",
+    shapes: ["Dominican Rep."],
+    point: [-70.4, 18.8],
+    occupation: true,
+    periods: [
+      {
+        from: 19160516,
+        to: 19240712,
+        status: "occupied",
+        note: `US Marines occupied the Dominican Republic and set up a military government. ${NOT_TERRITORY}`,
+      },
+    ],
+    endNote: "US military government in the Dominican Republic ended.",
+  },
+  {
+    id: "nicaragua",
+    name: "Nicaragua",
+    inset: "caribbean",
+    shapes: ["Nicaragua"],
+    point: [-85.2, 12.9],
+    occupation: true,
+    periods: [
+      {
+        from: 19120804,
+        to: 19250803,
+        status: "occupied",
+        note: `US Marines landed in Nicaragua and stayed for most of the next two decades. ${NOT_TERRITORY}`,
+      },
+      {
+        from: 19260506,
+        to: 19330102,
+        status: "occupied",
+        note: `US Marines returned to Nicaragua during its civil war. ${NOT_TERRITORY}`,
+      },
+    ],
+    endNote: "The US Marines left Nicaragua.",
+  },
+  {
+    id: "rhineland",
+    name: "US zone of the Rhineland",
+    inset: "europe",
+    point: [7.6, 50.36],
+    occupation: true,
+    periods: [
+      {
+        from: 19181201,
+        to: 19230124,
+        status: "occupied",
+        note: `After the First World War US troops occupied a zone of the German Rhineland around Koblenz. ${NOT_TERRITORY}`,
+      },
+    ],
+    endNote: "The last US troops left the Rhineland.",
+  },
+  {
+    id: "germany",
+    name: "US zone of Germany",
+    inset: "europe",
+    point: [11, 49.3],
+    occupation: true,
+    periods: [
+      {
+        from: 19450605,
+        to: 19490920,
+        status: "occupied",
+        note: `After the Second World War the United States governed its zone of southern Germany, alongside British, French and Soviet zones. ${NOT_TERRITORY}`,
+      },
+    ],
+    endNote: "US military government in Germany gave way to the new Federal Republic.",
+  },
+  {
+    id: "austria",
+    name: "US zone of Austria",
+    inset: "europe",
+    point: [13.5, 47.9],
+    occupation: true,
+    periods: [
+      {
+        from: 19450709,
+        to: 19551025,
+        status: "occupied",
+        note: `Austria was divided into four occupation zones; the United States ran the area around Salzburg and Linz. ${NOT_TERRITORY}`,
+      },
+    ],
+    endNote: "The occupation of Austria ended and the last US troops left.",
+  },
+  {
+    id: "iraq",
+    name: "Iraq",
+    inset: "europe",
+    shapes: ["Iraq"],
+    point: [43.7, 33.2],
+    occupation: true,
+    periods: [
+      {
+        from: 20030421,
+        to: 20040628,
+        status: "occupied",
+        note: `After the invasion of Iraq the US-led Coalition Provisional Authority governed the country. ${NOT_TERRITORY}`,
+      },
+    ],
+    endNote: "The Coalition Provisional Authority handed power to an Iraqi interim government.",
+  },
+  {
+    id: "japan",
+    name: "Japan",
+    inset: "east-asia",
+    shapes: ["Japan"],
+    point: [138.5, 36.5],
+    occupation: true,
+    periods: [
+      {
+        from: 19450902,
+        to: 19520428,
+        status: "occupied",
+        note: `Japan surrendered and was occupied by Allied forces under the US general Douglas MacArthur. ${NOT_TERRITORY} (Okinawa stayed under US administration until 1972.)`,
+      },
+    ],
+    endNote: "The Treaty of San Francisco took effect and the occupation of Japan ended.",
+  },
+  {
+    id: "south-korea",
+    name: "Southern Korea",
+    inset: "east-asia",
+    shapes: ["South Korea"],
+    point: [127.8, 36.4],
+    occupation: true,
+    periods: [
+      {
+        from: 19450908,
+        to: 19480815,
+        status: "occupied",
+        note: `US troops took the Japanese surrender in Korea south of the 38th parallel and set up a military government. ${NOT_TERRITORY}`,
+      },
+    ],
+    endNote: "The Republic of Korea was founded and US military government ended.",
   },
 ];
 

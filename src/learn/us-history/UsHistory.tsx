@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   geoAlbers,
-  geoBounds,
   geoConicEqualArea,
   geoMercator,
   geoPath,
@@ -24,10 +23,12 @@ import {
   type Unit,
   type UnitType,
 } from "./boundaries";
+import { CIVIL_WAR_EVENTS, SECEDED, WAR_END, isSeceded } from "./civilwar";
 import {
   GENERAL_EVENTS,
   HOLDINGS,
   INSETS,
+  OCCUPATIONS,
   STATUS_LABELS,
   holdingStatus,
   type Holding,
@@ -67,14 +68,17 @@ const dateFor = (year: number) => Math.max(year * 10000 + 1231, FIRST_DATA_DATE)
 
 /* ---------- Events ---------- */
 
+const ALL_HOLDINGS: Holding[] = [...HOLDINGS, ...OCCUPATIONS];
+
 type Event = { d: number; title: string; text: string };
 
 const EVENTS: Event[] = (() => {
   const list: Event[] = [
     ...CHANGES.map((c) => ({ d: c.d, title: c.n, text: c.text })),
     ...GENERAL_EVENTS.map((e) => ({ d: e.d, title: e.n, text: e.text })),
+    ...CIVIL_WAR_EVENTS.map((e) => ({ d: e.d, title: e.n, text: e.text })),
   ];
-  for (const h of HOLDINGS) {
+  for (const h of ALL_HOLDINGS) {
     h.periods.forEach((p, i) => {
       if (p.note) list.push({ d: p.from, title: h.name, text: p.note });
       const next = h.periods[i + 1];
@@ -96,11 +100,10 @@ const LAKES = lakes as unknown as GeoPermissibleObjects;
 
 type Region = "main" | "alaska" | "hawaii" | InsetId;
 
-/** Which panel a unit belongs in, from where it lies. */
+/** Which panel a unit belongs in. */
 function regionOf(unit: Unit): Region {
-  const [[west], [, north]] = geoBounds(unit);
-  if (west < -129 && north > 50) return "alaska";
-  if (west < -150 && north < 30) return "hawaii";
+  if (unit.properties.id.startsWith("ak_")) return "alaska";
+  if (unit.properties.id.startsWith("hi_")) return "hawaii";
   return "main";
 }
 
@@ -171,6 +174,9 @@ const PANELS: Record<Region, Panel> = {
     INSETS["central-pacific"].bounds,
   ),
   caribbean: makePanel("caribbean", INSETS.caribbean.label, 420, 300, geoMercator(), INSETS.caribbean.bounds),
+  mexico: makePanel("mexico", INSETS.mexico.label, 420, 300, geoMercator(), INSETS.mexico.bounds),
+  europe: makePanel("europe", INSETS.europe.label, 420, 300, geoMercator(), INSETS.europe.bounds),
+  "east-asia": makePanel("east-asia", INSETS["east-asia"].label, 420, 300, geoMercator(), INSETS["east-asia"].bounds),
   "western-pacific": makePanel(
     "western-pacific",
     INSETS["western-pacific"].label,
@@ -181,7 +187,22 @@ const PANELS: Record<Region, Panel> = {
   ),
 };
 
-const INSET_ORDER: Region[] = ["alaska", "hawaii", "caribbean", "central-pacific", "western-pacific"];
+const INSET_ORDER: Region[] = [
+  "alaska",
+  "hawaii",
+  "caribbean",
+  "mexico",
+  "central-pacific",
+  "western-pacific",
+  "east-asia",
+  "europe",
+];
+
+/** Claims drawn across US land (Deseret, 1849–51) are shown as an outline on top. */
+const OUTLINE_ONLY = new Set(["ds_deseret"]);
+
+/** Draw order: claims underneath, then territories, then states on top. */
+const DRAW_ORDER: Record<UnitType, number> = { o: 0, u: 1, t: 2, s: 3, d: 4 };
 
 /* Path strings are worked out once per panel and reused for every year. */
 const pathCache = new Map<string, string>();
@@ -254,23 +275,49 @@ function MapPanel({
       <rect width={panel.width} height={panel.height} className={styles.sea} />
       {base}
 
-      {units.map((u, i) => {
-        const p = u.properties;
-        const detail = `${UNIT_TYPE_LABELS[p.t]} · these borders from ${formatDate(p.s)}`;
-        return (
-          <path
-            key={`${p.id}-${p.s}-${i}`}
-            d={pathFor(panel, `${p.id}-${p.s}-${p.e}`, u)}
-            className={`${styles.unit} ${TYPE_CLASS[p.t]} ${picked === p.n ? styles.picked : ""}`}
-            onMouseEnter={pick(p.n, detail)}
-            onClick={pick(p.n, detail)}
-          />
-        );
-      })}
+      {[...units]
+        .filter((u) => !OUTLINE_ONLY.has(u.properties.id))
+        .sort((a, b) => DRAW_ORDER[a.properties.t] - DRAW_ORDER[b.properties.t])
+        .map((u, i) => {
+          const p = u.properties;
+          const seceded = isSeceded(p.id, date);
+          const detail = seceded
+            ? `Seceded and joined the Confederacy on ${formatDate(SECEDED[p.id].date)}`
+            : `${UNIT_TYPE_LABELS[p.t]} · these borders from ${formatDate(p.s)}`;
+          return (
+            <path
+              key={`${p.id}-${p.s}-${i}`}
+              d={pathFor(panel, `${p.id}-${p.s}-${p.e}`, u)}
+              className={`${styles.unit} ${seceded ? styles.other : TYPE_CLASS[p.t]} ${
+                picked === p.n ? styles.picked : ""
+              }`}
+              onMouseEnter={pick(p.n, detail)}
+              onClick={pick(p.n, detail)}
+            />
+          );
+        })}
+
+      {units
+        .filter((u) => OUTLINE_ONLY.has(u.properties.id))
+        .map((u, i) => {
+          const p = u.properties;
+          const detail = `Proposed state, never recognised · ${formatDate(p.s)} to ${formatDate(p.e)}`;
+          return (
+            <path
+              key={`outline-${p.id}-${i}`}
+              d={pathFor(panel, `${p.id}-${p.s}-${p.e}`, u)}
+              className={`${styles.outlineClaim} ${picked === p.n ? styles.picked : ""}`}
+              onMouseEnter={pick(p.n, detail)}
+              onClick={pick(p.n, detail)}
+            />
+          );
+        })}
 
       {holdings.map((h) => {
         const status = holdingStatus(h, date)!;
-        const detail = `${STATUS_LABELS[status.status]} since ${formatDate(status.from)}`;
+        const detail = h.occupation
+          ? `Military occupation, not US territory · from ${formatDate(status.from)}`
+          : `${STATUS_LABELS[status.status]} since ${formatDate(status.from)}`;
         const shapes = (h.shapes ?? [])
           .map((s) => COUNTRY_SHAPES.get(s))
           .filter((s): s is NonNullable<typeof s> => Boolean(s));
@@ -300,6 +347,7 @@ function MapPanel({
       {/* Short names on the bigger units, so the map can be read at a glance. */}
       {panel.id === "main" &&
         units.map((u, i) => {
+          if (OUTLINE_ONLY.has(u.properties.id)) return null;
           const area = geo.area(u);
           if (area < 900) return null;
           const [x, y] = geo.centroid(u);
@@ -317,7 +365,7 @@ function MapPanel({
 /* ---------- The viewer ---------- */
 
 export default function UsHistory() {
-  const [year, setYear] = useState(1803);
+  const [year, setYear] = useState(FIRST_YEAR);
   const [playing, setPlaying] = useState(false);
   const [picked, setPicked] = useState<Picked | null>(null);
 
@@ -338,7 +386,7 @@ export default function UsHistory() {
   }, [playing]);
 
   const units = useMemo(() => unitsOn(date), [date]);
-  const held = useMemo(() => HOLDINGS.filter((h) => holdingStatus(h, date)), [date]);
+  const held = useMemo(() => ALL_HOLDINGS.filter((h) => holdingStatus(h, date)), [date]);
   const events = useMemo(() => EVENTS.filter((e) => Math.floor(e.d / 10000) === year), [year]);
 
   const byRegion = useMemo(() => {
@@ -355,8 +403,11 @@ export default function UsHistory() {
     return {
       states: names(["s"]),
       territories: names(["t", "u"]),
+      seceded: units.filter((u) => isSeceded(u.properties.id, date)).length,
+      holdings: held.filter((h) => !h.occupation).length,
+      occupations: held.filter((h) => h.occupation).length,
     };
-  }, [units, held]);
+  }, [units, held, date]);
 
   const nextChange = EVENT_YEARS.find((y) => y > year);
   const previousChange = [...EVENT_YEARS].reverse().find((y) => y < year);
@@ -365,6 +416,62 @@ export default function UsHistory() {
     setPlaying(false);
     setYear(Math.min(LAST_YEAR, Math.max(FIRST_YEAR, to)));
   };
+
+  /** Move by a number of years from wherever the year is now (safe for key repeat). */
+  const nudge = useCallback((delta: number) => {
+    setPlaying(false);
+    setYear((y) => Math.min(LAST_YEAR, Math.max(FIRST_YEAR, y + delta)));
+  }, []);
+
+  // Left and right arrow keys step the year; holding a key keeps going.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      const target = event.target as HTMLElement | null;
+      const typing =
+        target &&
+        (target.tagName === "TEXTAREA" ||
+          (target.tagName === "INPUT" && (target as HTMLInputElement).type !== "range") ||
+          target.isContentEditable);
+      if (typing || event.altKey || event.ctrlKey || event.metaKey) return;
+      event.preventDefault();
+      nudge(event.key === "ArrowLeft" ? -1 : 1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [nudge]);
+
+  // Pressing and holding the ‹ › buttons repeats, like holding a key.
+  const holdTimer = useRef<number | null>(null);
+  const stopHold = useCallback(() => {
+    if (holdTimer.current !== null) {
+      window.clearTimeout(holdTimer.current);
+      window.clearInterval(holdTimer.current);
+      holdTimer.current = null;
+    }
+  }, []);
+  const startHold = (delta: number) => (event: React.PointerEvent) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    event.preventDefault();
+    stopHold();
+    nudge(delta);
+    holdTimer.current = window.setTimeout(() => {
+      holdTimer.current = window.setInterval(() => nudge(delta), 90);
+    }, 380);
+  };
+  useEffect(() => stopHold, [stopHold]);
+  const holdProps = (delta: number) => ({
+    onPointerDown: startHold(delta),
+    onPointerUp: stopHold,
+    onPointerLeave: stopHold,
+    onPointerCancel: stopHold,
+    onKeyDown: (event: React.KeyboardEvent) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        nudge(delta);
+      }
+    },
+  });
 
   return (
     <div className={styles.page}>
@@ -384,8 +491,9 @@ export default function UsHistory() {
           <button
             type="button"
             className={styles.iconButton}
-            onClick={() => step(year - 1)}
+            {...holdProps(-1)}
             aria-label="Previous year"
+            title="Previous year (← key; hold to keep going)"
           >
             ‹
           </button>
@@ -395,8 +503,9 @@ export default function UsHistory() {
           <button
             type="button"
             className={styles.iconButton}
-            onClick={() => step(year + 1)}
+            {...holdProps(1)}
             aria-label="Next year"
+            title="Next year (→ key; hold to keep going)"
           >
             ›
           </button>
@@ -450,15 +559,22 @@ export default function UsHistory() {
       <div className={styles.stats}>
         <span>
           <strong className="mono">{counts.states}</strong> {counts.states === 1 ? "state" : "states"}
+          {counts.seceded > 0 && <> ({counts.seceded} seceded)</>}
         </span>
         <span>
           <strong className="mono">{counts.territories}</strong> mainland{" "}
           {counts.territories === 1 ? "territory" : "territories"}
         </span>
         <span>
-          <strong className="mono">{held.length}</strong> overseas{" "}
-          {held.length === 1 ? "holding" : "holdings"}
+          <strong className="mono">{counts.holdings}</strong> overseas{" "}
+          {counts.holdings === 1 ? "holding" : "holdings"}
         </span>
+        {counts.occupations > 0 && (
+          <span>
+            <strong className="mono">{counts.occupations}</strong>{" "}
+            {counts.occupations === 1 ? "occupation" : "occupations"}
+          </span>
+        )}
         <span className={styles.pickedInfo} aria-live="polite">
           {picked ? (
             <>
@@ -469,6 +585,14 @@ export default function UsHistory() {
           )}
         </span>
       </div>
+
+      {date >= SECEDED.sc_state.date && date <= WAR_END && (
+        <p className={styles.note}>
+          Civil War: states that declared secession are shown in the claimed or independent
+          colour. The United States never recognised secession, so they are still counted as
+          states.
+        </p>
+      )}
 
       {year < 1783 && (
         <p className={styles.note}>

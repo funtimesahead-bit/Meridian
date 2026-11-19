@@ -442,3 +442,18 @@
     gap: 2px;
   }
 }
+
+/* A claim drawn over US land: outline only, so the land underneath stays readable. */
+.outlineClaim {
+  fill: rgba(125, 90, 166, 0.12);
+  stroke: #b28be0;
+  stroke-width: 1.6;
+  stroke-dasharray: 5 4;
+  vector-effect: non-scaling-stroke;
+  cursor: pointer;
+}
+
+.outlineClaim.picked {
+  stroke: #fff;
+  stroke-width: 2.2;
+}
