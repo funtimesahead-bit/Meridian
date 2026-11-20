@@ -91,7 +91,8 @@
 
 .shape-ring,
 .shape-ringFaint,
-.shape-line {
+.shape-line,
+.shape-outline {
   fill: none;
   vector-effect: non-scaling-stroke;
   pointer-events: none;
@@ -121,6 +122,12 @@
   stroke-width: 1.5;
   stroke-dasharray: 5 5;
   opacity: 0.8;
+}
+
+/* Thin borders drawn over the land, e.g. US states. */
+.shape-outline {
+  stroke: color-mix(in srgb, var(--text) 32%, transparent);
+  stroke-width: 0.9;
 }
 
 /* ---- Markers ---- */

@@ -1,0 +1,170 @@
+.quiz {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 20px var(--gutter) 64px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.quiz > a {
+  margin-bottom: 0;
+  justify-self: start;
+}
+
+.head {
+  display: grid;
+  gap: 10px;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 680;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+/* ---- Before starting ---- */
+
+.ready {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.lede {
+  font-size: 16.5px;
+  color: var(--muted);
+  max-width: 62ch;
+}
+
+.modes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: min(100%, 560px);
+}
+
+.doneActions {
+  display: flex;
+  gap: 8px;
+}
+
+.last {
+  color: var(--good);
+  font-weight: 600;
+}
+
+/* The answer box stays on screen while the long lists scroll. */
+.entry {
+  position: sticky;
+  top: 68px;
+  z-index: 5;
+  padding: 10px;
+  margin: -10px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius);
+}
+
+/* ---- The list ---- */
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 4px 8px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 6px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.place {
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.capital {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.also {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--faint);
+}
+
+.blank {
+  display: block;
+  width: 80%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--surface-2);
+}
+
+.found {
+  border-color: transparent;
+  background: var(--good-soft);
+}
+
+.found .capital {
+  color: var(--good);
+}
+
+.fresh {
+  animation: flash 600ms ease-out;
+}
+
+@keyframes flash {
+  from {
+    box-shadow: 0 0 0 2px var(--good);
+  }
+}
+
+.missed {
+  border-color: transparent;
+  background: var(--bad-soft);
+}
+
+.missed .capital {
+  color: var(--bad);
+}
+
+@media (max-width: 560px) {
+  .title {
+    font-size: 22px;
+  }
+
+  .ready {
+    padding: 16px;
+  }
+
+  .modes {
+    grid-template-columns: 1fr;
+  }
+
+  .list {
+    grid-template-columns: 1fr;
+  }
+}

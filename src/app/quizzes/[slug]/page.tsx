@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { LazyCityRankQuiz, LazyCountryQuiz, LazyFlagQuiz } from "@/components/lazy";
+import { LazyCapitalQuiz, LazyCityRankQuiz, LazyCountryQuiz, LazyFlagQuiz } from "@/components/lazy";
+import { CAPITAL_QUIZZES, findCapitalQuiz } from "@/quizzes/capitals/data";
 import { CITY_QUIZZES, findCityQuiz } from "@/quizzes/cities/data";
 import { COUNTRY_QUIZZES, findQuiz } from "@/quizzes/countries/data";
 import { FLAG_QUIZZES, findFlagQuiz } from "@/quizzes/flags/data";
@@ -8,14 +9,14 @@ import { FLAG_QUIZZES, findFlagQuiz } from "@/quizzes/flags/data";
 type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
-  return [...COUNTRY_QUIZZES, ...CITY_QUIZZES, ...FLAG_QUIZZES].map((quiz) => ({ slug: quiz.slug }));
+  return [...COUNTRY_QUIZZES, ...CITY_QUIZZES, ...FLAG_QUIZZES, ...CAPITAL_QUIZZES].map((quiz) => ({ slug: quiz.slug }));
 }
 
 export const dynamicParams = false;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const slug = (await params).slug;
-  const quiz = findQuiz(slug) ?? findCityQuiz(slug) ?? findFlagQuiz(slug);
+  const quiz = findQuiz(slug) ?? findCityQuiz(slug) ?? findFlagQuiz(slug) ?? findCapitalQuiz(slug);
   return quiz ? { title: quiz.title, description: quiz.blurb } : {};
 }
 
@@ -39,6 +40,13 @@ export default async function QuizPage({ params }: Props) {
     return (
       <main>
         <LazyFlagQuiz slug={slug} />
+      </main>
+    );
+  }
+  if (findCapitalQuiz(slug)) {
+    return (
+      <main>
+        <LazyCapitalQuiz slug={slug} />
       </main>
     );
   }

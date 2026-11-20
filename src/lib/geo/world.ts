@@ -56,7 +56,8 @@ export type SceneId =
   | "asia"
   | "oceania"
   | "oceania-wide"
-  | "oceania-cities";
+  | "oceania-cities"
+  | "usa";
 
 export type Scene = {
   id: string;
@@ -213,6 +214,23 @@ function buildProjection(id: SceneId): Built {
         [-34.8, -7.2], // east Brazil
         [-68.6, -55.9], // Cape Horn
         [-75.7, -46], // south Chile
+      ],
+    );
+  }
+  if (id === "usa") {
+    // The 50 states, Alaska and Hawaii included, for the state capitals quiz.
+    return fitToPoints(
+      geoAzimuthalEqualArea().rotate([112, -42]).clipAngle(70),
+      1000,
+      640,
+      450,
+      [
+        [-124.7, 48.4], // Washington coast
+        [-117.1, 32.5], // San Diego
+        [-81.8, 24.5], // Key West
+        [-67, 45], // Maine
+        [-134.4, 58.3], // Juneau
+        [-157.9, 21.3], // Honolulu
       ],
     );
   }

@@ -28,7 +28,7 @@ export type MapShape = {
   id: string;
   /** One object, or several whose outlines are combined (used for ring bands). */
   geo: GeoPermissibleObjects | GeoPermissibleObjects[];
-  style: "ring" | "ringFaint" | "band" | "line";
+  style: "ring" | "ringFaint" | "band" | "line" | "outline";
 };
 
 export type MapMarker = {

@@ -7,6 +7,7 @@ import { GameBest } from "@/components/GameBest";
 import { CITY_QUIZZES } from "@/quizzes/cities/data";
 import { COUNTRY_QUIZZES } from "@/quizzes/countries/data";
 import { FLAG_QUIZZES } from "@/quizzes/flags/data";
+import { CAPITAL_QUIZZES } from "@/quizzes/capitals/data";
 
 export const metadata: Metadata = { title: "Quizzes" };
 
@@ -15,7 +16,7 @@ export default function QuizzesPage() {
     <main className="page">
       <div className="page-head">
         <p className="page-head__eyebrow">
-          {COUNTRY_QUIZZES.length + CITY_QUIZZES.length + FLAG_QUIZZES.length + 1} quizzes
+          {COUNTRY_QUIZZES.length + CITY_QUIZZES.length + FLAG_QUIZZES.length + CAPITAL_QUIZZES.length + 1} quizzes
         </p>
         <h1>Quizzes</h1>
         <p>
@@ -66,6 +67,34 @@ export default function QuizzesPage() {
               </div>
               <div className="game-card__foot">
                 <GameBest scoreKey={`quiz-${quiz.slug}`} showSetup={false} />
+                <span className="play-pill">Start</span>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      <h2 className="section-title">Capitals</h2>
+      <p className="section-note">Type every capital in any order. Countries with more than one capital accept any of them.</p>
+      <div className="card-grid">
+        {CAPITAL_QUIZZES.map((quiz) => (
+          <Link key={quiz.slug} href={`/quizzes/${quiz.slug}`} className="game-card">
+            <div className="game-card__art">
+              <ContinentArt
+                scene={quiz.scene}
+                borders={quiz.scene !== "world" && quiz.scene !== "usa"}
+                dots={quiz.entries.map((e) => [e.lon, e.lat] as [number, number])}
+              />
+            </div>
+            <div className="game-card__body">
+              <h2 className="game-card__title">{quiz.title}</h2>
+              <p className="game-card__blurb">{quiz.blurb}</p>
+              <div className="tag-row">
+                <span className="tag">{quiz.entries.length} capitals</span>
+                <span className="tag">Map optional</span>
+              </div>
+              <div className="game-card__foot">
+                <GameBest scoreKey={`quiz-${quiz.slug}`} />
                 <span className="play-pill">Start</span>
               </div>
             </div>

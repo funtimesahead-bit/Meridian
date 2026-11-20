@@ -12,12 +12,13 @@ import { GAMES } from "@/lib/games";
 import { CITY_QUIZZES } from "@/quizzes/cities/data";
 import { COUNTRY_QUIZZES } from "@/quizzes/countries/data";
 import { FLAG_QUIZZES } from "@/quizzes/flags/data";
+import { CAPITAL_QUIZZES } from "@/quizzes/capitals/data";
 import { UPDATES, VERSION } from "@/lib/updates";
 import styles from "./home.module.css";
 
 /* The landing page. Everything here is worked out at build time. */
 
-const quizCount = COUNTRY_QUIZZES.length + CITY_QUIZZES.length + FLAG_QUIZZES.length + 1;
+const quizCount = COUNTRY_QUIZZES.length + CITY_QUIZZES.length + FLAG_QUIZZES.length + CAPITAL_QUIZZES.length + 1;
 const answerCount =
   COUNTRY_QUIZZES.reduce((n, q) => n + q.countries.length + (q.extra?.places.length ?? 0), 0) +
   CITY_QUIZZES.reduce((n, q) => n + q.cities.length, 0) +
@@ -32,6 +33,7 @@ const CONTINENTS = ["Europe", "Asia", "Africa", "North America", "South America"
     countries: COUNTRY_QUIZZES.find((q) => q.region === region),
     cities: CITY_QUIZZES.find((q) => q.region === region),
     flags: FLAG_QUIZZES.find((q) => q.region === region),
+    capitals: CAPITAL_QUIZZES.find((q) => q.region === region),
   }),
 );
 
@@ -159,7 +161,7 @@ export default function Home() {
           </Link>
         </header>
         <div className={styles.continents}>
-          {CONTINENTS.map(({ region, countries, cities, flags }) => (
+          {CONTINENTS.map(({ region, countries, cities, flags, capitals }) => (
             <div key={region} className={styles.continent}>
               {countries && (
                 <div className={styles.continentArt}>
@@ -178,6 +180,12 @@ export default function Home() {
                   <Link href={`/quizzes/${cities.slug}`}>
                     <span>Biggest cities</span>
                     <span className="mono">{cities.cities.length}</span>
+                  </Link>
+                )}
+                {capitals && (
+                  <Link href={`/quizzes/${capitals.slug}`}>
+                    <span>Capitals</span>
+                    <span className="mono">{capitals.entries.length}</span>
                   </Link>
                 )}
                 {flags && (

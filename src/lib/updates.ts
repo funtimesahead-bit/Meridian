@@ -12,6 +12,18 @@ export type Update = {
 
 export const UPDATES: Update[] = [
   {
+    version: "1.1.00",
+    date: "2026-11-19",
+    title: "Capitals quizzes",
+    notes: [
+      "New Capitals section with eight quizzes: the whole world, every continent, and the 50 US state capitals.",
+      "Type capitals in any order and each one fills in next to its country, with an optional map where every capital is marked.",
+      "Countries with more than one capital, such as South Africa and Bolivia, accept any of them. Older spellings like Kiev count too.",
+      "The US capitals map shows state borders, Alaska and Hawaii included.",
+      "Capitals links added to each continent on the home page.",
+    ],
+  },
+  {
     version: "1.0.00",
     date: "2026-11-19",
     title: "Expedition launches, plus flag quizzes",
