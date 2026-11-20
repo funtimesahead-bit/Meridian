@@ -185,14 +185,6 @@
 .reveal {
   display: grid;
   gap: 14px;
-  animation: rise 180ms ease-out;
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
 }
 
 .revealMain {
@@ -372,5 +364,283 @@
 
   .summaryActions {
     justify-items: start;
+  }
+}
+
+/* ---- Header sound toggle ---- */
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mute {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.mute:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.mute[aria-pressed="true"] {
+  color: var(--faint);
+}
+
+/* ---- The altitude climb ---- */
+
+.climb {
+  display: flex;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.gauge {
+  position: relative;
+  flex: none;
+  width: 104px;
+  height: 172px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-start;
+  padding: 3px 0 0 24px;
+  border-top: 1px dashed color-mix(in srgb, var(--tier) 30%, transparent);
+  transition: background 200ms ease;
+}
+
+.band:first-child {
+  border-top: 0;
+}
+
+.band span {
+  font-size: 9.5px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--tier) 45%, transparent);
+  transition: color 200ms ease;
+}
+
+.bandLit {
+  background: color-mix(in srgb, var(--tier) 9%, transparent);
+}
+
+.bandLit span {
+  color: var(--tier);
+}
+
+.rope {
+  position: absolute;
+  left: 12px;
+  bottom: 0;
+  width: 2px;
+  background: var(--border-strong);
+}
+
+.climber {
+  position: absolute;
+  left: 7px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--tier);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tier) 25%, transparent);
+  transition: background 150ms ease;
+}
+
+.climberLanded {
+  animation: land 420ms ease-out;
+}
+
+@keyframes land {
+  40% {
+    transform: scale(1.7);
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--tier) 18%, transparent);
+  }
+}
+
+.climbBody {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: 10px;
+}
+
+.climbTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.stamp {
+  position: relative;
+  opacity: 0;
+  transform: scale(1.8);
+}
+
+.stamped {
+  opacity: 1;
+  transform: none;
+  animation: stamp 320ms cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+
+@keyframes stamp {
+  from {
+    opacity: 0;
+    transform: scale(1.8) rotate(-6deg);
+  }
+}
+
+/* Rays flying out of the badge when it lands. */
+.burst {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow:
+    0 -26px 0 -1px var(--tier),
+    18px -18px 0 -1px var(--tier),
+    26px 0 0 -1px var(--tier),
+    18px 18px 0 -1px var(--tier),
+    0 26px 0 -1px var(--tier),
+    -18px 18px 0 -1px var(--tier),
+    -26px 0 0 -1px var(--tier),
+    -18px -18px 0 -1px var(--tier);
+  animation: burst 560ms ease-out forwards;
+}
+
+.legendary .burst {
+  animation-duration: 800ms;
+}
+
+@keyframes burst {
+  from {
+    opacity: 1;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+.revealPoints {
+  color: var(--text);
+}
+
+.pointsLanded {
+  color: var(--tier);
+  animation: bump 300ms ease-out;
+}
+
+@keyframes bump {
+  40% {
+    transform: scale(1.18);
+  }
+}
+
+.before {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+.after {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 260ms ease,
+    transform 260ms ease;
+}
+
+/* ---- Results replay ---- */
+
+.summary {
+  cursor: default;
+}
+
+.totalDone {
+  display: inline-block;
+  animation: bump 380ms ease-out;
+  color: var(--accent);
+}
+
+.squareWait {
+  display: inline-block;
+  opacity: 0.12;
+  filter: grayscale(1);
+}
+
+.squareIn {
+  display: inline-block;
+  animation: pop 280ms cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+}
+
+.rowWait {
+  opacity: 0;
+  transform: translateX(-6px);
+}
+
+.rowIn {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 260ms ease,
+    transform 260ms ease;
+}
+
+@media (max-width: 560px) {
+  .gauge {
+    width: 96px;
+    height: 156px;
+  }
+
+  .band span {
+    font-size: 8.5px;
+  }
+
+  .climb {
+    gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .climberLanded,
+  .stamped,
+  .burst,
+  .pointsLanded,
+  .totalDone,
+  .squareIn {
+    animation: none;
   }
 }

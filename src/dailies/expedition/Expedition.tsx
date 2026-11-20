@@ -27,7 +27,12 @@ import {
   type StopCounts,
   type Tier,
 } from "./scoring";
+import { Climb, prefersReducedMotion, useCountUp } from "./Climb";
+import { primeSound, setSoundOn, sounds, useSoundOn } from "./sound";
 import styles from "./Expedition.module.css";
+
+/** Time between stops in the results replay. */
+const REPLAY_MS = 420;
 
 export const SECONDS_PER_STOP = 25;
 const STOP_MS = SECONDS_PER_STOP * 1000;
@@ -117,6 +122,11 @@ export default function Expedition() {
   const [notice, setNotice] = useState<string | null>(null);
   const [shaking, setShaking] = useState(false);
   const [copied, setCopied] = useState(false);
+  /** Whether this stop's climb has landed, so the details can follow it. */
+  const [landed, setLanded] = useState(false);
+  /** How many stops the results replay has shown so far. */
+  const [replay, setReplay] = useState(STOPS);
+  const soundOn = useSoundOn();
   const inputRef = useRef<HTMLInputElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
 
@@ -156,8 +166,10 @@ export default function Expedition() {
           writeSaved(day, restored);
         }
         setSaved(restored);
-        if (restored.stops.length >= STOPS) setPhase("done");
-        else if (restored.startedAt !== null) setPhase("playing");
+        if (restored.stops.length >= STOPS) {
+          setReplay(prefersReducedMotion() ? STOPS : 0);
+          setPhase("done");
+        } else if (restored.startedAt !== null) setPhase("playing");
         else if (restored.stops.length > 0) setPhase("reveal");
         else setPhase("intro");
       })
@@ -203,6 +215,7 @@ export default function Expedition() {
         };
       }
       update({ ...saved, stops: [...saved.stops, result], startedAt: null });
+      setLanded(false);
       setGuess("");
       setNotice(null);
       setPhase("reveal");
@@ -221,6 +234,7 @@ export default function Expedition() {
   }, [phase, index]);
 
   const beginStop = () => {
+    primeSound();
     const started = Date.now();
     setNow(started);
     update({ ...saved, startedAt: started });
@@ -228,13 +242,16 @@ export default function Expedition() {
   };
 
   const next = () => {
-    if (index >= STOPS) setPhase("done");
-    else beginStop();
+    if (index >= STOPS) {
+      setReplay(prefersReducedMotion() ? STOPS : 0);
+      setPhase("done");
+    } else beginStop();
   };
 
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
     if (phase !== "playing" || !prompt || !guess.trim()) return;
+    primeSound();
     const answer = matchAnswer(prompt, guess);
     if (!answer) {
       setNotice(`“${guess.trim()}” is not a valid answer here.`);
@@ -266,17 +283,34 @@ export default function Expedition() {
       });
   }, [phase, saved, day, update]);
 
+  /* ---- Results replay: the route redrawn stop by stop ---- */
+
+  useEffect(() => {
+    if (phase !== "done" || replay >= STOPS) return;
+    const id = window.setTimeout(() => {
+      const s = saved.stops[replay];
+      sounds.pop(s?.tier ?? null, replay);
+      setReplay(replay + 1);
+      if (replay + 1 >= STOPS) window.setTimeout(() => sounds.finale(), 260);
+    }, replay === 0 ? 350 : REPLAY_MS);
+    return () => window.clearTimeout(id);
+  }, [phase, replay, saved.stops]);
+
+  const visible = phase === "done" ? replay : saved.stops.length;
+  const replayTotal = saved.stops.slice(0, visible).reduce((sum, s) => sum + s.points, 0);
+  const shownTotal = useCountUp(replayTotal, REPLAY_MS - 60);
+
   /* ---- Map: a trail through every answer so far ---- */
 
   const answered = useMemo(
     () =>
-      saved.stops.map((s, i) => {
+      saved.stops.slice(0, visible).map((s, i) => {
         const answer = s.answerId
           ? prompts[i]?.answers.find((a) => a.id === s.answerId)
           : undefined;
         return { stop: s, answer, point: answer ? answerPoint(answer) : null };
       }),
-    [saved.stops, prompts],
+    [saved.stops, prompts, visible],
   );
 
   const mapCountries: MapCountry[] = useMemo(
@@ -326,9 +360,34 @@ export default function Expedition() {
       <Link href="/dailies" className={ui.back}>
         ← Dailies
       </Link>
-      <h1 className={styles.title}>
-        Expedition <span className="mono">#{number}</span>
-      </h1>
+      <div className={styles.titleRow}>
+        <h1 className={styles.title}>
+          Expedition <span className="mono">#{number}</span>
+        </h1>
+        <button
+          type="button"
+          className={styles.mute}
+          onClick={() => setSoundOn(!soundOn)}
+          aria-pressed={!soundOn}
+          aria-label={soundOn ? "Mute sound" : "Turn sound on"}
+          title={soundOn ? "Mute sound" : "Turn sound on"}
+        >
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor" />
+            {soundOn ? (
+              <path
+                d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+            ) : (
+              <path d="M16 9l5 6M21 9l-5 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            )}
+          </svg>
+        </button>
+      </div>
     </div>
   );
 
@@ -398,25 +457,33 @@ export default function Expedition() {
   }
 
   if (phase === "done") {
-    const squares = saved.stops
-      .map((s) => (s.tier ? TIERS[s.tier].square : MISSED_SQUARE))
-      .join("");
+    const squareList = saved.stops.map((s) => (s.tier ? TIERS[s.tier].square : MISSED_SQUARE));
+    const squares = squareList.join("");
+    const replaying = replay < STOPS;
     const shareText = `Meridian Expedition #${number} · ${total}/${STOPS * MAX_POINTS}\n${squares}\n${typeof window !== "undefined" ? window.location.origin : ""}/dailies/expedition`;
     return (
       <div className={styles.page}>
         {header}
-        <div className={styles.summary}>
+        <div
+          className={styles.summary}
+          onClick={() => replaying && setReplay(STOPS)}
+          title={replaying ? "Click to skip" : undefined}
+        >
           <div>
             <p className={styles.kicker}>Expedition complete</p>
             <p className={styles.total}>
-              <span className="mono">{total}</span>
+              <span className={`mono ${replaying ? "" : styles.totalDone}`}>{shownTotal}</span>
               <span className={styles.totalMax}>
                 {" "}
                 / <span className="mono">{STOPS * MAX_POINTS}</span>
               </span>
             </p>
             <p className={styles.squares} aria-label="Rarity of each answer">
-              {squares}
+              {squareList.map((sq, i) => (
+                <span key={i} className={i < replay ? styles.squareIn : styles.squareWait}>
+                  {sq}
+                </span>
+              ))}
             </p>
           </div>
           <div className={styles.summaryActions}>
@@ -438,7 +505,7 @@ export default function Expedition() {
 
         <ol className={styles.stopList}>
           {saved.stops.map((s, i) => (
-            <li key={i}>
+            <li key={i} className={i < replay ? styles.rowIn : styles.rowWait}>
               <span className={styles.stopNumber}>{i + 1}</span>
               <span className={styles.stopPrompt}>
                 {prompts[i]?.text}
@@ -483,7 +550,7 @@ export default function Expedition() {
           const cls = s ? (s.tier ? styles[s.tier] : styles.missed) : i === index ? styles.current : "";
           return <span key={i} className={`${styles.stopDot} ${cls}`} />;
         })}
-        <span className={`mono ${styles.runningTotal}`}>{total} pts</span>
+        <span className={`mono ${styles.runningTotal}`}>{phase === "reveal" && !landed ? total - (saved.stops[index - 1]?.points ?? 0) : total} pts</span>
       </div>
 
       <div className={styles.card}>
@@ -530,10 +597,13 @@ export default function Expedition() {
         ) : (
           last && (
             <div className={styles.reveal} aria-live="polite">
-              <div className={styles.revealMain}>
-                <span className={`${styles.tier} ${last.tier ? styles[last.tier] : styles.missed}`}>
-                  {last.tier ? TIERS[last.tier].label : "Out of time"}
-                </span>
+              <Climb
+                key={index}
+                tier={last.tier}
+                share={last.share}
+                points={last.points}
+                onLanded={() => setLanded(true)}
+              >
                 <p className={styles.revealAnswer}>
                   {last.name ? (
                     <>
@@ -547,9 +617,8 @@ export default function Expedition() {
                     <strong>No answer in time</strong>
                   )}
                 </p>
-                <p className={`mono ${styles.revealPoints}`}>+{last.points}</p>
-              </div>
-              <div className={styles.topAnswers}>
+              </Climb>
+              <div className={`${styles.topAnswers} ${landed ? styles.after : styles.before}`}>
                 <p>
                   Most common · {shown?.answers.length} valid answers
                 </p>

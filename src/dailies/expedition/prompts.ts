@@ -3,6 +3,7 @@ import { SHAPE_NEIGHBOURS } from "@/lib/geo/world";
 import { worldCountry, WORLD_COUNTRIES, type Fame, type WorldCountry } from "@/lib/geo/countries";
 import type { CityData } from "@/games/rings/data";
 import { BROAD_PROMPTS } from "./broad";
+import { applyWeightOverrides } from "./weights";
 
 /* The Expedition's prompts. Every prompt has a complete list of valid
    answers, each with a starting guess at how often players will pick it
@@ -394,7 +395,12 @@ let staticPrompts: Prompt[] | null = null;
 export const KNOWN_NAMES = new Set<string>();
 
 export function allPrompts(data: CityData | null): Prompt[] {
-  staticPrompts ??= [...LIST_PROMPTS, ...BROAD_PROMPTS, ...borderPrompts(), ...letterPrompts()];
+  staticPrompts ??= applyWeightOverrides([
+    ...LIST_PROMPTS,
+    ...BROAD_PROMPTS,
+    ...borderPrompts(),
+    ...letterPrompts(),
+  ]);
   const all = data ? [...staticPrompts, ...cityPrompts(data)] : staticPrompts;
   for (const prompt of all) for (const a of prompt.answers) for (const k of a.keys) KNOWN_NAMES.add(k);
   for (const c of WORLD_COUNTRIES) for (const k of [c.name, ...c.aliases]) KNOWN_NAMES.add(normalize(k));
@@ -427,7 +433,8 @@ export function promptsForDay(day: string, data: CityData | null): Prompt[] {
 
 /* ---------- Days ---------- */
 
-const FIRST_DAY = "2026-11-15";
+/** Expedition #1: launch day. */
+const FIRST_DAY = "2026-11-19";
 
 /** Today's date in the player's own time zone, as YYYY-MM-DD. */
 export function today(): string {

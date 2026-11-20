@@ -5,7 +5,7 @@ import { useSyncExternalStore } from "react";
 /* Today's Expedition number and whether this browser has played it.
    Kept free of the game's own modules so the Dailies page stays light. */
 
-const FIRST_DAY = "2026-11-15";
+const FIRST_DAY = "2026-11-19";
 const STOPS = 8;
 
 function today(): string {
