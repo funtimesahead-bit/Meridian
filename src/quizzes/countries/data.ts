@@ -314,7 +314,9 @@ const AFRICA: QuizCountry[] = [
   c("Mali"),
   c("Mauritania"),
   c("Mauritius", { marker: [57.55, -20.25] }),
-  c("Morocco"),
+  // Western Sahara is a separate shape on the map; Morocco controls most of it,
+  // so it fills in with Morocco rather than staying grey at the end.
+  c("Morocco", { shapes: ["Morocco", "W. Sahara"] }),
   c("Mozambique"),
   c("Namibia"),
   c("Niger"),
