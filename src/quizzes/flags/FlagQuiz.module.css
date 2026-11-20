@@ -1,0 +1,267 @@
+.quiz {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 20px var(--gutter) 64px;
+  grid-template-columns: minmax(0, 1fr);
+  display: grid;
+  gap: 12px;
+}
+
+.quiz > a {
+  margin-bottom: 0;
+  justify-self: start;
+}
+
+.head {
+  display: grid;
+  gap: 10px;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 680;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.setup {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  padding: 32px 22px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.setup p {
+  max-width: 52ch;
+  font-size: 16.5px;
+  color: var(--muted);
+}
+
+.setup strong {
+  color: var(--text);
+}
+
+.variants {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: min(100%, 460px);
+}
+
+.variants button {
+  padding: 0 12px;
+  font-size: 14.5px;
+}
+
+.doneActions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ---- The question, kept on screen while the grid scrolls ---- */
+
+.ask {
+  position: sticky;
+  top: calc(var(--header-height, 60px) + 8px);
+  z-index: 5;
+  display: grid;
+  gap: 6px;
+  padding: 14px 18px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 24px rgb(0 0 0 / 0.25);
+}
+
+.askLine {
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.askLine strong {
+  display: inline-block;
+  color: var(--accent);
+  animation: swap 220ms ease-out;
+}
+
+@keyframes swap {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+}
+
+.askSub {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 20px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.pips {
+  display: flex;
+  gap: 5px;
+}
+
+.pipOn,
+.pipOff {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.pipOn {
+  background: var(--accent);
+}
+
+.pipOff {
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+
+.notice {
+  color: var(--text);
+}
+
+/* ---- The grid ---- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  gap: 10px;
+}
+
+.tile {
+  position: relative;
+  display: grid;
+  aspect-ratio: 3 / 2;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    border-color 120ms ease,
+    opacity 200ms ease;
+}
+
+.tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* A faint edge so white flags do not melt into each other. */
+  filter: drop-shadow(0 0 0.5px rgb(255 255 255 / 0.5));
+  user-select: none;
+}
+
+.tile:not(:disabled):not(.done):hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.tile:disabled {
+  cursor: default;
+}
+
+.done {
+  cursor: default;
+}
+
+.done img {
+  opacity: 0.38;
+}
+
+.caption {
+  position: absolute;
+  inset: auto 4px 4px;
+  padding: 2px 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--text);
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  border-radius: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.good {
+  border-color: var(--good);
+  box-shadow: inset 0 0 0 1px var(--good);
+}
+
+.partial {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.missed {
+  border-color: var(--bad);
+  box-shadow: inset 0 0 0 1px var(--bad);
+}
+
+/* The answer, shown after the last try. */
+.answer {
+  border-color: var(--good);
+  box-shadow:
+    inset 0 0 0 2px var(--good),
+    0 0 0 4px color-mix(in srgb, var(--good) 30%, transparent);
+  animation: pulse 700ms ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  to {
+    transform: scale(1.06);
+  }
+}
+
+.wrong {
+  border-color: var(--bad);
+  box-shadow: inset 0 0 0 2px var(--bad);
+  animation: nope 360ms ease;
+}
+
+@keyframes nope {
+  20%,
+  60% {
+    transform: translateX(-4px);
+  }
+  40%,
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+    gap: 7px;
+  }
+
+  .askLine {
+    font-size: 18px;
+  }
+
+  .tile {
+    padding: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer,
+  .wrong,
+  .askLine strong {
+    animation: none;
+  }
+}

@@ -69,3 +69,8 @@ export const LazyCountryQuiz = dynamic(
   () => import("@/quizzes/countries/CountryQuiz"),
   { ssr: false, loading: Loading },
 );
+
+export const LazyFlagQuiz = dynamic(() => import("@/quizzes/flags/FlagQuiz"), {
+  ssr: false,
+  loading: Loading,
+});

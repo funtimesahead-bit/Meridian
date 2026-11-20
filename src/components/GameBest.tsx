@@ -27,7 +27,16 @@ function setupLabel(setup: string): string {
 }
 
 /** One-line summary of the player's best saved score for a game or quiz. */
-export function GameBest({ scoreKey, showSetup = true }: { scoreKey: string; showSetup?: boolean }) {
+export function GameBest({
+  scoreKey,
+  showSetup = true,
+  percent = false,
+}: {
+  scoreKey: string;
+  showSetup?: boolean;
+  /** Show the best as a percentage (scores saved out of 100). */
+  percent?: boolean;
+}) {
   const bests = Object.entries(useBests(scoreKey));
   if (bests.length === 0) {
     return <span className="card-best">Not played yet</span>;
@@ -39,7 +48,7 @@ export function GameBest({ scoreKey, showSetup = true }: { scoreKey: string; sho
     <span className="card-best">
       Best{" "}
       <strong className="mono">
-        {top.score}/{top.max}
+        {percent ? `${top.score}%` : `${top.score}/${top.max}`}
       </strong>
       {showSetup ? ` · ${setupLabel(setup)}` : ""}
     </span>

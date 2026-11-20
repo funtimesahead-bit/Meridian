@@ -643,3 +643,23 @@ html {
     grid-template-columns: 1fr;
   }
 }
+
+/* Flag quiz card art */
+.flag-art {
+  position: absolute;
+  inset: 0;
+  transition: transform 400ms ease;
+}
+
+.game-card:hover .flag-art {
+  transform: scale(1.04);
+}
+
+.flag-art img {
+  position: absolute;
+  width: 26%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 6px 16px rgb(0 0 0 / 0.45);
+}

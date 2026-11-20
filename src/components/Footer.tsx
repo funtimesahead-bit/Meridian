@@ -35,7 +35,15 @@ export function Footer() {
           <a href="https://digital.newberry.org/ahcb/" target="_blank" rel="noreferrer">
             Newberry Library
           </a>{" "}
-          (CC BY-NC-SA 4.0).
+          (CC BY-NC-SA 4.0). Flags:{" "}
+          <a href="https://github.com/lipis/flag-icons" target="_blank" rel="noreferrer">
+            flag-icons
+          </a>{" "}
+          (MIT) and{" "}
+          <a href="https://commons.wikimedia.org/" target="_blank" rel="noreferrer">
+            Wikimedia Commons
+          </a>{" "}
+          (public domain).
         </p>
       </div>
     </footer>
