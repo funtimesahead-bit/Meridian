@@ -8,6 +8,7 @@ import { CITY_QUIZZES } from "@/quizzes/cities/data";
 import { COUNTRY_QUIZZES } from "@/quizzes/countries/data";
 import { FLAG_QUIZZES } from "@/quizzes/flags/data";
 import { CAPITAL_QUIZZES } from "@/quizzes/capitals/data";
+import { FIND_QUIZZES } from "@/quizzes/find/data";
 
 export const metadata: Metadata = { title: "Quizzes" };
 
@@ -16,7 +17,7 @@ export default function QuizzesPage() {
     <main className="page">
       <div className="page-head">
         <p className="page-head__eyebrow">
-          {COUNTRY_QUIZZES.length + CITY_QUIZZES.length + FLAG_QUIZZES.length + CAPITAL_QUIZZES.length + 1} quizzes
+          {COUNTRY_QUIZZES.length + CITY_QUIZZES.length + FLAG_QUIZZES.length + CAPITAL_QUIZZES.length + FIND_QUIZZES.length + 1} quizzes
         </p>
         <h1>Quizzes</h1>
         <p>
@@ -67,6 +68,31 @@ export default function QuizzesPage() {
               </div>
               <div className="game-card__foot">
                 <GameBest scoreKey={`quiz-${quiz.slug}`} showSetup={false} />
+                <span className="play-pill">Start</span>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      <h2 className="section-title">Find the Country</h2>
+      <p className="section-note">A country is named; click it on the map. Three tries each, scored on accuracy.</p>
+      <div className="card-grid">
+        {FIND_QUIZZES.map((quiz) => (
+          <Link key={quiz.slug} href={`/quizzes/${quiz.slug}`} className="game-card">
+            <div className="game-card__art">
+              <ContinentArt scene={quiz.scene} borders />
+            </div>
+            <div className="game-card__body">
+              <h2 className="game-card__title">{quiz.title}</h2>
+              <p className="game-card__blurb">{quiz.blurb}</p>
+              <div className="tag-row">
+                <span className="tag">{quiz.countries.length} countries</span>
+                <span className="tag">Clicking</span>
+                <span className="tag">3 tries each</span>
+              </div>
+              <div className="game-card__foot">
+                <GameBest scoreKey={`quiz-${quiz.slug}`} showSetup={false} percent />
                 <span className="play-pill">Start</span>
               </div>
             </div>

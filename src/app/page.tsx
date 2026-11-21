@@ -4,6 +4,7 @@ import { ContinentArt } from "@/components/ContinentArt";
 import { ExpeditionCard } from "@/components/ExpeditionCard";
 import { LazyHeroGlobe } from "@/components/lazy";
 import { OutlineCard } from "@/components/OutlineCard";
+import { UnfurlCard } from "@/components/UnfurlCard";
 import { YourProgress } from "@/components/home/YourProgress";
 import { BROAD_PROMPTS } from "@/dailies/expedition/broad";
 import { EXPEDITION_OPEN } from "@/dailies/expedition/config";
@@ -13,12 +14,13 @@ import { CITY_QUIZZES } from "@/quizzes/cities/data";
 import { COUNTRY_QUIZZES } from "@/quizzes/countries/data";
 import { FLAG_QUIZZES } from "@/quizzes/flags/data";
 import { CAPITAL_QUIZZES } from "@/quizzes/capitals/data";
+import { FIND_QUIZZES } from "@/quizzes/find/data";
 import { UPDATES, VERSION } from "@/lib/updates";
 import styles from "./home.module.css";
 
 /* The landing page. Everything here is worked out at build time. */
 
-const quizCount = COUNTRY_QUIZZES.length + CITY_QUIZZES.length + FLAG_QUIZZES.length + CAPITAL_QUIZZES.length + 1;
+const quizCount = COUNTRY_QUIZZES.length + CITY_QUIZZES.length + FLAG_QUIZZES.length + CAPITAL_QUIZZES.length + FIND_QUIZZES.length + 1;
 const answerCount =
   COUNTRY_QUIZZES.reduce((n, q) => n + q.countries.length + (q.extra?.places.length ?? 0), 0) +
   CITY_QUIZZES.reduce((n, q) => n + q.cities.length, 0) +
@@ -34,6 +36,7 @@ const CONTINENTS = ["Europe", "Asia", "Africa", "North America", "South America"
     cities: CITY_QUIZZES.find((q) => q.region === region),
     flags: FLAG_QUIZZES.find((q) => q.region === region),
     capitals: CAPITAL_QUIZZES.find((q) => q.region === region),
+    find: FIND_QUIZZES.find((q) => q.region === region),
   }),
 );
 
@@ -101,6 +104,7 @@ export default function Home() {
         <div className={styles.todayGrid}>
           <OutlineCard titleTag="h3" />
           <ExpeditionCard />
+          <UnfurlCard titleTag="h3" />
           <Link href="/quizzes/quick-fire" className="game-card">
             <div className="game-card__art">
               <CardArt kind="quickfire" />
@@ -161,7 +165,7 @@ export default function Home() {
           </Link>
         </header>
         <div className={styles.continents}>
-          {CONTINENTS.map(({ region, countries, cities, flags, capitals }) => (
+          {CONTINENTS.map(({ region, countries, cities, flags, capitals, find }) => (
             <div key={region} className={styles.continent}>
               {countries && (
                 <div className={styles.continentArt}>
@@ -174,6 +178,12 @@ export default function Home() {
                   <Link href={`/quizzes/${countries.slug}`}>
                     <span>Countries</span>
                     <span className="mono">{countries.countries.length}</span>
+                  </Link>
+                )}
+                {find && (
+                  <Link href={`/quizzes/${find.slug}`}>
+                    <span>Find on the map</span>
+                    <span className="mono">{find.countries.length}</span>
                   </Link>
                 )}
                 {cities && (
@@ -221,7 +231,7 @@ export default function Home() {
         </Link>
         <Link href="/learn/europe-history" className={`${styles.learn} ${styles.learnNext}`}>
           <div className={styles.learnText}>
-            <p className={styles.kicker}>New in Learn</p>
+            <p className={styles.kicker}>Learn</p>
             <h2>Europe through time</h2>
             <p>
               From 1492 to today: Habsburgs and Ottomans, Napoleon and the Congress of Vienna,
@@ -233,6 +243,22 @@ export default function Home() {
           </div>
           <div className={styles.learnArt} aria-hidden="true">
             <ContinentArt scene="europe" borders />
+          </div>
+        </Link>
+        <Link href="/learn/day-night" className={`${styles.learn} ${styles.learnNext}`}>
+          <div className={styles.learnText}>
+            <p className={styles.kicker}>New in Learn</p>
+            <h2>Day and night</h2>
+            <p>
+              Where is it day right now? Slide through the hours and the seasons to see the line
+              between day and night sweep around the world, and why the seasons happen.
+            </p>
+            <span className={styles.primary}>
+              Open the map <span aria-hidden="true">→</span>
+            </span>
+          </div>
+          <div className={styles.learnArt} aria-hidden="true">
+            <CardArt kind="daynight" />
           </div>
         </Link>
       </section>

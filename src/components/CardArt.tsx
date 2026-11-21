@@ -9,10 +9,10 @@ const DIM_DOTS: [number, number][] = [
 const AMBER = "#f6b73c";
 const DIM = "#3a4c62";
 
-export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "borders" | "route" | "trail" | "quickfire" | "ranks" | "history" | "outline" | "capital" | "sprint" }) {
+export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "borders" | "route" | "trail" | "quickfire" | "ranks" | "history" | "outline" | "capital" | "sprint" | "neighbours" | "north" | "unfurl" | "daynight" }) {
   return (
     <svg viewBox="0 0 320 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      {kind !== "borders" && kind !== "route" && kind !== "ranks" && kind !== "history" && kind !== "outline" &&
+      {kind !== "borders" && kind !== "route" && kind !== "ranks" && kind !== "history" && kind !== "outline" && kind !== "neighbours" && kind !== "unfurl" && kind !== "daynight" &&
         DIM_DOTS.map(([x, y]) => <circle key={`${x}-${y}`} cx={x} cy={y} r="2.4" fill={DIM} />)}
 
       {kind === "dot" && (
@@ -199,6 +199,61 @@ export function CardArt({ kind }: { kind: "dot" | "pin" | "rings" | "ring" | "bo
           <path d="M214 34 L282 44 L296 96 L222 86 Z" fill="#35475c" />
           <path d="M222 86 L296 96 L290 140 L232 130 Z" fill={AMBER} />
         </g>
+      )}
+
+      {kind === "neighbours" && (
+        <g stroke="#0b1016" strokeWidth="2" strokeLinejoin="round">
+          <path d="M40 40 L110 28 L128 76 L84 104 L36 88 Z" fill="#2f9d5c" />
+          <path d="M110 28 L190 34 L176 86 L128 76 Z" fill="#2f9d5c" />
+          <path d="M190 34 L276 30 L290 84 L236 108 L176 86 Z" fill="#35475c" />
+          <path d="M84 104 L128 76 L176 86 L160 140 L98 146 Z" fill={AMBER} />
+          <path d="M176 86 L236 108 L226 150 L160 140 Z" fill="#2f9d5c" />
+          <path d="M36 88 L84 104 L98 146 L48 138 Z" fill="#35475c" />
+        </g>
+      )}
+
+      {kind === "north" && (
+        <>
+          <line x1="20" y1="58" x2="300" y2="58" stroke="#e8edf2" strokeWidth="1.5" strokeDasharray="5 5" opacity="0.7" />
+          <line x1="20" y1="96" x2="300" y2="96" stroke="#e8edf2" strokeWidth="1.5" strokeDasharray="5 5" opacity="0.4" />
+          <circle cx="96" cy="58" r="14" fill="#4ade80" opacity="0.18" />
+          <circle cx="96" cy="58" r="6.5" fill="#4ade80" />
+          <circle cx="228" cy="96" r="6.5" fill="#f87171" />
+          <path d="M160 18 L172 44 L160 38 L148 44 Z" fill={AMBER} />
+          <text x="160" y="140" textAnchor="middle" fontSize="16" fontWeight="700" fill={AMBER}>N</text>
+        </>
+      )}
+
+      {kind === "unfurl" && (
+        <>
+          <g transform="translate(100 26)">
+            <rect width="40" height="108" fill="#0055a4" />
+            <rect x="40" width="40" height="108" fill="#f4f4f4" />
+            <rect x="80" width="40" height="108" fill="#e1000f" />
+            {[0, 1, 2, 3, 4, 5].flatMap((c) =>
+              [0, 1, 2, 3].map((r) =>
+                (c * 7 + r * 3) % 5 < 3 ? (
+                  <rect key={`${c}-${r}`} x={c * 20} y={r * 27} width="20" height="27" fill="#18212c" stroke="#0b1016" />
+                ) : null,
+              ),
+            )}
+          </g>
+        </>
+      )}
+
+      {kind === "daynight" && (
+        <>
+          <rect x="20" y="20" width="280" height="120" rx="10" fill="#0d2238" />
+          <path d="M20 20 L150 20 C190 60 120 100 170 140 L20 140 Z" fill="#02060c" opacity="0.65" />
+          <circle cx="240" cy="66" r="18" fill="#ffd76a" opacity="0.25" />
+          <circle cx="240" cy="66" r="9" fill="#ffd76a" />
+          {[[60, 50], [96, 98], [126, 70]].map(([x, y]) => (
+            <circle key={`${x}-${y}`} cx={x} cy={y} r="2.5" fill="#8fb3ff" />
+          ))}
+          {[[200, 100], [262, 112], [214, 44]].map(([x, y]) => (
+            <circle key={`${x}-${y}`} cx={x} cy={y} r="2.5" fill={AMBER} />
+          ))}
+        </>
       )}
 
       {kind === "borders" && (

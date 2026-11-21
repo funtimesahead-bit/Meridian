@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ExpeditionCard } from "@/components/ExpeditionCard";
 import { OutlineCard } from "@/components/OutlineCard";
+import { UnfurlCard } from "@/components/UnfurlCard";
 
 export const metadata: Metadata = { title: "Dailies" };
 
@@ -16,6 +17,7 @@ export default function DailiesPage() {
       <div className="card-grid">
         <OutlineCard />
         <ExpeditionCard />
+        <UnfurlCard />
         <div className="soon-card">
           <strong>More dailies on the way</strong>
           <span>New daily challenges are in the works.</span>

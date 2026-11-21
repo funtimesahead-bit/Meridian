@@ -12,6 +12,19 @@ export type Update = {
 
 export const UPDATES: Update[] = [
   {
+    version: "2.0.00",
+    date: "2026-11-20",
+    title: "Five new ways to play",
+    notes: [
+      "New daily, Unfurl: today's flag is hidden under tiles, and every wrong guess lifts four more. Six guesses, with a continent hint after three.",
+      "New game, Neighbours: a country lights up on a map with all the borders drawn but no names. Name every country it touches by land.",
+      "New game, Due North: pick which of two cities is further north, further south, or closer to the Equator. The map then shows both lines of latitude.",
+      "New quizzes, Find the Country: a country is named and you click it on the map. One for every continent, three tries each, scored on accuracy.",
+      "New in Learn, Day and Night: see where it is day and night for any date and time, play through a day or a whole year, and click anywhere for its daylight hours.",
+      "Find on the map links added to each continent on the home page.",
+    ],
+  },
+  {
     version: "1.2.00",
     date: "2026-11-20",
     title: "Europe Through Time",

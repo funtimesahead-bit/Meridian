@@ -181,7 +181,7 @@ export function findCountry(text: string): Country | null {
 }
 
 /** Where to put a country's name on the map: the middle of its biggest piece. */
-export function labelPoint(country: Country): [number, number] | null {
+export function labelPoint(country: { shapes: string[] }): [number, number] | null {
   let best: { area: number; point: [number, number] } | null = null;
   for (const name of country.shapes) {
     const shape = COUNTRY_SHAPES.get(name);

@@ -57,6 +57,27 @@ export default function LearnPage() {
             </div>
           </div>
         </Link>
+        <Link href="/learn/day-night" className="game-card">
+          <div className="game-card__art">
+            <CardArt kind="daynight" />
+          </div>
+          <div className="game-card__body">
+            <h2 className="game-card__title">Day and Night</h2>
+            <p className="game-card__blurb">
+              Where is it day right now? Slide through the hours and the seasons to see the
+              line between day and night move, and find out why the seasons happen.
+            </p>
+            <div className="tag-row">
+              <span className="tag">Interactive map</span>
+              <span className="tag">Earth and Sun</span>
+              <span className="tag">Seasons</span>
+            </div>
+            <div className="game-card__foot">
+              <span className="card-best">Explore at your own pace</span>
+              <span className="play-pill">Open</span>
+            </div>
+          </div>
+        </Link>
         <div className="soon-card">
           <strong>Flashcards and more maps</strong>
           <span>Coming soon.</span>

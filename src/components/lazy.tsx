@@ -84,3 +84,28 @@ export const LazyEuropeHistory = dynamic(() => import("@/learn/europe-history/Eu
   ssr: false,
   loading: Loading,
 });
+
+export const LazyFindQuiz = dynamic(() => import("@/quizzes/find/FindQuiz"), {
+  ssr: false,
+  loading: Loading,
+});
+
+export const LazyNeighbours = dynamic(() => import("@/games/neighbours/Neighbours"), {
+  ssr: false,
+  loading: Loading,
+});
+
+export const LazyDueNorth = dynamic(() => import("@/games/due-north/DueNorth"), {
+  ssr: false,
+  loading: Loading,
+});
+
+export const LazyUnfurl = dynamic(() => import("@/dailies/unfurl/Unfurl"), {
+  ssr: false,
+  loading: Loading,
+});
+
+export const LazyDayNight = dynamic(() => import("@/learn/day-night/DayNight"), {
+  ssr: false,
+  loading: Loading,
+});

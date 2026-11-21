@@ -5,7 +5,7 @@ export type GameInfo = {
   blurb: string;
   tags: string[];
   /** Which picture the card shows. */
-  art: "dot" | "pin" | "capital" | "rings" | "ring" | "route" | "sprint";
+  art: "dot" | "pin" | "capital" | "rings" | "ring" | "route" | "sprint" | "neighbours" | "north";
   /** Where the game's best scores are saved (see src/lib/scores.ts). */
   scoreKey?: string;
 };
@@ -72,5 +72,23 @@ export const GAMES: GameInfo[] = [
     tags: ["Cities", "Continents", "Timed"],
     art: "sprint",
     scoreKey: "city-sprint",
+  },
+  {
+    slug: "neighbours",
+    title: "Neighbours",
+    blurb:
+      "A country lights up on a map with every border drawn but no names. Name every country it touches by land.",
+    tags: ["Countries", "Borders", "Typing"],
+    art: "neighbours",
+    scoreKey: "neighbours",
+  },
+  {
+    slug: "due-north",
+    title: "Due North",
+    blurb:
+      "Two cities, one question: which is further north, further south, or closer to the Equator? Harder than it sounds.",
+    tags: ["Cities", "Latitude", "Clicking"],
+    art: "north",
+    scoreKey: "due-north",
   },
 ];
