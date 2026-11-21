@@ -607,3 +607,7 @@
 .update li::marker {
   color: var(--accent);
 }
+
+.learnNext {
+  margin-top: 14px;
+}

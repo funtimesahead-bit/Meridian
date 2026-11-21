@@ -35,7 +35,15 @@ export function Footer() {
           <a href="https://digital.newberry.org/ahcb/" target="_blank" rel="noreferrer">
             Newberry Library
           </a>{" "}
-          (CC BY-NC-SA 4.0). Flags:{" "}
+          (CC BY-NC-SA 4.0). Historical Europe:{" "}
+          <a href="https://github.com/aourednik/historical-basemaps" target="_blank" rel="noreferrer">
+            historical-basemaps
+          </a>{" "}
+          and{" "}
+          <a href="https://icr.ethz.ch/data/cshapes/" target="_blank" rel="noreferrer">
+            CShapes 2.0
+          </a>{" "}
+          (GPL). Flags:{" "}
           <a href="https://github.com/lipis/flag-icons" target="_blank" rel="noreferrer">
             flag-icons
           </a>{" "}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CardArt } from "@/components/CardArt";
+import { ContinentArt } from "@/components/ContinentArt";
 
 export const metadata: Metadata = { title: "Learn" };
 
@@ -28,6 +29,27 @@ export default function LearnPage() {
               <span className="tag">Interactive map</span>
               <span className="tag">History</span>
               <span className="tag">1776–today</span>
+            </div>
+            <div className="game-card__foot">
+              <span className="card-best">Explore at your own pace</span>
+              <span className="play-pill">Open</span>
+            </div>
+          </div>
+        </Link>
+        <Link href="/learn/europe-history" className="game-card">
+          <div className="game-card__art">
+            <ContinentArt scene="europe" borders />
+          </div>
+          <div className="game-card__body">
+            <h2 className="game-card__title">Europe Through Time</h2>
+            <p className="game-card__blurb">
+              From 1492 to today: empires rise and split, borders move by treaty and by war.
+              Key-year maps up to 1886, then every year, with each change explained.
+            </p>
+            <div className="tag-row">
+              <span className="tag">Interactive map</span>
+              <span className="tag">History</span>
+              <span className="tag">1492–today</span>
             </div>
             <div className="game-card__foot">
               <span className="card-best">Explore at your own pace</span>

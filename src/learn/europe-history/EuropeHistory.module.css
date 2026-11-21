@@ -1,0 +1,126 @@
+.mapWrap {
+  position: relative;
+}
+
+.svg {
+  cursor: grab;
+}
+
+.svg:active {
+  cursor: grabbing;
+}
+
+.unit {
+  fill: var(--fill);
+  vector-effect: non-scaling-stroke;
+}
+
+/* Under another crown: the overlord's colour, lighter. */
+.kind-v {
+  fill-opacity: 0.62;
+}
+
+.kind-c {
+  fill-opacity: 0.45;
+  stroke-dasharray: 3 2;
+}
+
+/* Occupied: the occupier's colour, washed out, with a red edge. */
+.kind-x {
+  fill-opacity: 0.4;
+  stroke: #e06262;
+  stroke-dasharray: 4 3;
+}
+
+.zoom {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: grid;
+  gap: 4px;
+}
+
+.zoom button {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1;
+}
+
+.zoom button:hover {
+  border-color: var(--border-strong);
+}
+
+.snapshotTag {
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.ticks {
+  position: relative;
+  height: 6px;
+  margin: -4px 10px 0;
+}
+
+.ticks span {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 6px;
+  margin-left: -1px;
+  border-radius: 1px;
+  background: var(--accent);
+}
+
+.ticks .yearlyBand {
+  width: auto;
+  height: 3px;
+  top: 1.5px;
+  margin-left: 0;
+  opacity: 0.45;
+}
+
+.swatchI {
+  --fill: #3d7cc4;
+}
+
+.swatchV {
+  --fill: #3d7cc4;
+  opacity: 0.62;
+}
+
+.swatchC {
+  --fill: #3d7cc4;
+  opacity: 0.45;
+  border: 1px dashed #9ab;
+}
+
+.swatchX {
+  --fill: #6a7280;
+  opacity: 0.6;
+  border: 1px dashed #e06262;
+}
+
+.era {
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.since {
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 10px;
+}

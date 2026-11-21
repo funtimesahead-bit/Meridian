@@ -12,6 +12,18 @@ export type Update = {
 
 export const UPDATES: Update[] = [
   {
+    version: "1.2.00",
+    date: "2026-11-20",
+    title: "Europe Through Time",
+    notes: [
+      "New in Learn: an interactive map of Europe's borders from 1492 to today.",
+      "Key-year maps from 1492 to 1880, then a map for every year from 1886, including both world wars, occupations and the breakup of the Soviet Union and Yugoslavia.",
+      "Each key year has a short explainer, and more than 100 dated events say what changed and why.",
+      "Hover or tap any country to see what it was and who ruled it. Zoom and pan to see small states, and use the arrow keys or Play to move through time.",
+      "Links can open on a year, for example /learn/europe-history?year=1815.",
+    ],
+  },
+  {
     version: "1.1.00",
     date: "2026-11-19",
     title: "Capitals quizzes",

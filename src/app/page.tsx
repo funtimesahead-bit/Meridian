@@ -219,6 +219,22 @@ export default function Home() {
             <CardArt kind="history" />
           </div>
         </Link>
+        <Link href="/learn/europe-history" className={`${styles.learn} ${styles.learnNext}`}>
+          <div className={styles.learnText}>
+            <p className={styles.kicker}>New in Learn</p>
+            <h2>Europe through time</h2>
+            <p>
+              From 1492 to today: Habsburgs and Ottomans, Napoleon and the Congress of Vienna,
+              two world wars and the end of the Soviet Union, with every change explained.
+            </p>
+            <span className={styles.primary}>
+              Open the map <span aria-hidden="true">→</span>
+            </span>
+          </div>
+          <div className={styles.learnArt} aria-hidden="true">
+            <ContinentArt scene="europe" borders />
+          </div>
+        </Link>
       </section>
 
       <section className={styles.section}>

@@ -79,3 +79,8 @@ export const LazyCapitalQuiz = dynamic(() => import("@/quizzes/capitals/CapitalQ
   ssr: false,
   loading: Loading,
 });
+
+export const LazyEuropeHistory = dynamic(() => import("@/learn/europe-history/EuropeHistory"), {
+  ssr: false,
+  loading: Loading,
+});
